@@ -1,5 +1,20 @@
-#include "SuplaSensor.h"
+/*
+  Copyright (C) AC SOFTWARE SP. Z O.O.
 
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
+#include "SuplaSensor.h"
 
 OneWireBus::OneWireBus(uint8_t pinNumber)
   : oneWire(pinNumber), pin(pinNumber), nextBus(nullptr), lastReadTime(0) {
@@ -62,9 +77,9 @@ int8_t OneWireBus::getIndex(uint8_t *deviceAddress) {
     }
   }
   return -1;
-};
+}
 
-DS18B20::DS18B20(uint8_t pin, uint8_t *deviceAddress = nullptr) : Thermometer() {
+DS18B20::DS18B20(uint8_t pin, uint8_t *deviceAddress) {
   OneWireBus *bus = oneWireBus;
   OneWireBus *prevBus = nullptr;
   address[0] = 0;
@@ -141,3 +156,9 @@ double DS18B20::getValue() {
 void DS18B20::onInit() {
   channel.setNewValue(getValue());
 }
+
+uint8_t  DS18B20::getPin() {
+  return myBus->pin;
+}
+
+OneWireBus *DS18B20::oneWireBus = nullptr;

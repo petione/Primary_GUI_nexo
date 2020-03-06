@@ -1,3 +1,19 @@
+/*
+  Copyright (C) AC SOFTWARE SP. Z O.O.
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 #ifndef SuplaSensor_h
 #define SuplaSensor_h
 
@@ -5,8 +21,8 @@
 #include <DallasTemperature.h>
 #include <OneWire.h>
 
-#include <supla-common/log.h>
 #include <supla/sensor/thermometer.h>
+#include <supla-common/log.h>
 
 class OneWireBus {
   public:
@@ -22,12 +38,13 @@ class OneWireBus {
     OneWire oneWire;
 };
 
-class DS18B20 : public Thermometer() {
+class DS18B20: public Supla::Sensor::Thermometer {
   public:
-    DS18B20(uint8_t pin, uint8_t *deviceAddress = nullptr);
+   DS18B20(uint8_t pin, uint8_t *deviceAddress = nullptr);
     void iterateAlways();
     double getValue();
     void onInit();
+    uint8_t  getPin();
 
   protected:
     static OneWireBus *oneWireBus;
@@ -37,5 +54,5 @@ class DS18B20 : public Thermometer() {
     double lastValidValue;
 };
 
-//OneWireBus *DS18B20::oneWireBus = nullptr;
+extern std::vector <DS18B20 *> sensor;
 #endif //SuplaSensor_h

@@ -1,3 +1,19 @@
+/*
+  Copyright (C) AC SOFTWARE SP. Z O.O.
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 #include "SuplaConfigManager.h"
 
 #define CONFIG_FILE_PATH "/config.dat"
@@ -36,7 +52,7 @@ uint8_t *ConfigOption::getValueBin(size_t size) {
 const char *ConfigOption::getValueHex(size_t size) {
   char *buffer = (char *)malloc(sizeof(char) * (size * 2));
   int a, b;
-  
+
   buffer[0] = 0;
   b = 0;
 
@@ -68,7 +84,34 @@ SuplaConfigManager::SuplaConfigManager() {
     Serial.println(F("\nFailed to mount SPIFFS"));
   }
   _optionCount = 0;
-};
+}
+
+void SuplaConfigManager::begin() {
+  this->addKey(KEY_SUPLA_GUID, MAX_GUID);
+  this->addKey(KEY_SUPLA_AUTHKEY, MAX_AUTHKEY);
+  this->addKey(KEY_WIFI_SSID, MAX_SSID);
+  this->addKey(KEY_WIFI_PASS, MAX_PASSWORD);
+  this->addKey(KEY_LOGIN, MAX_MLOGIN);
+  this->addKey(KEY_LOGIN_PASS, MAX_MPASSWORD);
+  this->addKey(KEY_HOST_NAME, MAX_HOSTNAME);
+  this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
+  this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
+  this->addKey(KEY_GPIO_THERMOMETR, sizeof(int));
+
+  this->addKeyAndRead(KEY_MAX_DS18B20, "1", sizeof(int));
+  for (int i = 0; i < this->get(KEY_MAX_DS18B20)->getValueInt(); i++)
+  {
+    String ds_key = KEY_DS;
+    String ds_name_key = KEY_DS_NAME;
+    ds_key += i;
+    ds_name_key += i;
+
+    this->addKey(ds_key.c_str(), MAX_DS18B20_ADDRESS_HEX);
+    this->addKey(ds_name_key.c_str(), MAX_DS18B20_NAME);
+  }
+
+  this->load();
+}
 
 uint8_t SuplaConfigManager::addKey(const char *key, int maxLength) {
   return addKey(key, NULL, maxLength);

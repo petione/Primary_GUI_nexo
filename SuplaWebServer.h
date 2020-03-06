@@ -22,14 +22,12 @@
 #include <SuplaDevice.h>
 #include <vector>
 
+#include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
-//#include "SuplaSensor.h"
+#include "SuplaSensor.h"
 
-extern SuplaConfigManager configManager;
-//extern std::vector <DS18B20 *> sensor;
-
-#define  GUI_BLUE            "#005c96"
-#define  GUI_GREEN           "#00D151"
+#define  GUI_BLUE             "#005c96"
+#define  GUI_GREEN              "#00D151"
 
 #define  DEFAULT_HOSTNAME      "Primary GUI"
 #define  SUPLA_DEVICE_NAME     "SUPLA TESTY"
@@ -39,12 +37,41 @@ extern SuplaConfigManager configManager;
 #define  DEFAULT_LOGIN         "admin"
 #define  DEFAULT_PASSWORD      "password"
 
-#define  UPDATE_PATH           " /firmware"
+#define  UPDATE_PATH           "/firmware"
 
 class SuplaWebServer {
+  public:
+    SuplaWebServer();
+    //SuplaWebServer(const SuplaConfigManager configManager, const SuplaConfigESP configESP);
+    void begin(const SuplaConfigManager& configManager, const SuplaConfigESP& configESP);
+    void handleAPClient();
+
   private:
+    SuplaConfigManager configManager;
+    SuplaConfigESP configESP;
+
     char* gui_color;
     char* gui_box_shadow;
+    const char * Supported_Gpio[18] = {
+      "GPIO0 (D3)",
+      "GPIO1 (TX)",
+      "GPIO2 (D4)",
+      "GPIO3 (RX)",
+      "GPIO4 (D2)",
+      "GPIO5 (D1)",
+      "",
+      "",
+      "",
+      "GPIO9 (FL-ESP8285)",
+      "GPIO10 (FL-ESP8285)",
+      "",
+      "GPIO12 (D6)",
+      "GPIO13 (D7)",
+      "GPIO14 (D5)",
+      "GPIO15 (D8)",
+      "GPIO16 (D0)",
+      "BRAK"
+    };
 
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
@@ -67,11 +94,5 @@ class SuplaWebServer {
 
     String getLogoSupla(void);
     String getMacAddress();
-
-  public:
-    SuplaWebServer();
-    void begin();
-    void handleAPClient();
-
 };
 #endif //SuplaWebServer_h

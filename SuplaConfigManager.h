@@ -1,3 +1,19 @@
+/*
+  Copyright (C) AC SOFTWARE SP. Z O.O.
+
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU General Public License
+  as published by the Free Software Foundation; either version 2
+  of the License, or (at your option) any later version.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+*/
+
 #ifndef SuplaConfigManager_h
 #define SuplaConfigManager_h
 
@@ -10,6 +26,7 @@
 #define KEY_HOST_NAME           "hostName"
 #define KEY_SUPLA_SERVER        "suplaServer"
 #define KEY_SUPLA_EMAIL         "suplaEmail"
+#define KEY_GPIO_THERMOMETR     "gipoTherm"
 #define KEY_MAX_DS18B20         "ds18b20"
 #define KEY_DS                  "ds"
 #define KEY_DS_NAME             "dsName"
@@ -28,6 +45,8 @@
 #define  MAX_DS18B20_ADDRESS      8
 #define  MAX_DS18B20_NAME         8
 
+#define GIPO_NONE                 16
+
 #define E_CONFIG_OK               0
 #define E_CONFIG_FS_ACCESS        1
 #define E_CONFIG_FILE_NOT_FOUND   2
@@ -43,12 +62,6 @@
 
 #include <SuplaDevice.h>
 #include "FS.h"
-
-typedef enum _configMode {
-  normal,
-  mode_1,
-  mode_2
-};
 
 class ConfigOption {
   public:
@@ -72,6 +85,7 @@ class SuplaConfigManager {
 
   public:
     SuplaConfigManager();
+    void begin();
     uint8_t addKey(const char *key, int maxLength);
     uint8_t addKey(const char *key, const char *value, int maxLength);
     uint8_t addKeyAndRead(const char *key, const char *value, int maxLength);
@@ -82,7 +96,6 @@ class SuplaConfigManager {
 
     ConfigOption *get(const char *key);
     bool set(const char *key, const char *value);
-    _configMode ConfigMode;
 
     bool isDeviceConfigured();
     void setGUIDandAUTHKEY();
@@ -92,4 +105,5 @@ class SuplaConfigManager {
     ConfigOption *_options[CONFIG_MAX_OPTIONS];
 };
 
+//extern SuplaConfigManager configManager;
 #endif
