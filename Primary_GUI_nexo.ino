@@ -24,7 +24,7 @@
 #include "SuplaSensor.h"
 #include "SuplaWebServer.h"
 
-SuplaWebServer webServer;
+//SuplaWebServer webServer;
 std::vector <DS18B20 *> sensor;
 
 void setup() {
@@ -33,7 +33,7 @@ void setup() {
   SuplaConfigManager configManager;
   configManager.begin();
 
-  SuplaConfigESP configESP = SuplaConfigESP(configManager);
+  SuplaConfigESP configESP = SuplaConfigESP(&configManager);
 
   new Supla::ESPWifi(configManager.get(KEY_WIFI_SSID)->getValue(),
                      configManager.get(KEY_WIFI_PASS)->getValue());
@@ -51,10 +51,10 @@ void setup() {
                     (char*)configManager.get(KEY_SUPLA_EMAIL)->getValue(),     // Email address used to login to Supla Cloud
                     (char*)configManager.get(KEY_SUPLA_AUTHKEY)->getValue());  // Authorization key
 
-  webServer.begin(configManager, configESP);
+  WebServer.begin(configManager, configESP);
 }
 
 void loop() {
   SuplaDevice.iterate();
-  webServer.handleAPClient();
+  WebServer.handleAPClient();
 }

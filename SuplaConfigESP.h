@@ -23,25 +23,25 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 
-#include "SuplaConfigManager.h"
-//#include "SuplaWebServer.h"
-
 typedef enum _configModeESP {
   normal,
   mode_1,
   mode_2
 };
 
+class SuplaConfigManager;
+
 class SuplaConfigESP {
   public:
     SuplaConfigESP();
-    SuplaConfigESP(const SuplaConfigManager& configManager);
-    
+    SuplaConfigESP(SuplaConfigManager* configManager);
+
     void configModeInit();
     _configModeESP configModeESP;
-  private:
-    SuplaConfigManager configManager;
 
+  private:
+    SuplaConfigManager *_configManager;
 };
 
+extern SuplaConfigESP ConfigESP;
 #endif //SuplaConfigESP_h

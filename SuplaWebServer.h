@@ -26,7 +26,7 @@
 #include "SuplaConfigManager.h"
 #include "SuplaSensor.h"
 
-#define  GUI_BLUE             "#005c96"
+#define  GUI_BLUE               "#005c96"
 #define  GUI_GREEN              "#00D151"
 
 #define  DEFAULT_HOSTNAME      "Primary GUI"
@@ -39,17 +39,19 @@
 
 #define  UPDATE_PATH           "/firmware"
 
+class  SuplaConfigManager;
+class  SuplaConfigESP;
+
 class SuplaWebServer {
   public:
     SuplaWebServer();
-    //SuplaWebServer(const SuplaConfigManager configManager, const SuplaConfigESP configESP);
-    void begin(const SuplaConfigManager& configManager, const SuplaConfigESP& configESP);
+    void begin(SuplaConfigManager& configManager, SuplaConfigESP& configESP);
     void handleAPClient();
 
   private:
-    SuplaConfigManager configManager;
-    SuplaConfigESP configESP;
-
+    SuplaConfigManager _configManager;
+    SuplaConfigESP _configESP;
+    
     char* gui_color;
     char* gui_box_shadow;
     const char * Supported_Gpio[18] = {
@@ -95,4 +97,6 @@ class SuplaWebServer {
     String getLogoSupla(void);
     String getMacAddress();
 };
+
+extern SuplaWebServer WebServer;
 #endif //SuplaWebServer_h

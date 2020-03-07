@@ -333,3 +333,5 @@ void SuplaConfigManager::setGUIDandAUTHKEY() {
   this->set(KEY_SUPLA_AUTHKEY, AUTHKEY);
 
 }
+
+SuplaConfigManager ConfigManager;

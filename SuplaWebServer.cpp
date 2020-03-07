@@ -18,6 +18,8 @@
 #include <OneWire.h>
 
 #include "SuplaWebServer.h"
+#include "SuplaConfigESP.h"
+#include "SuplaConfigManager.h"
 
 SuplaWebServer::SuplaWebServer() {
   this->gui_box_shadow = "box-shadow:0 1px 30px rgba(0,0,0,.9)";
@@ -27,7 +29,7 @@ SuplaWebServer::SuplaWebServer() {
 /*SuplaWebServer::SuplaWebServer(const SuplaConfigManager configManager, const SuplaConfigESP configESP) {
   this->configManager = configManager;
   this->configESP = configESP;
-}*/
+  }*/
 
 void SuplaWebServer::handleNotFound() {
 
@@ -37,22 +39,23 @@ void SuplaWebServer::handleAPClient() {
   httpServer.handleClient();
 }
 
-void SuplaWebServer::begin(const SuplaConfigManager& configManager, const SuplaConfigESP& configESP) {
-  this->configManager = configManager;
-  this->configESP = configESP;
+void SuplaWebServer::begin(SuplaConfigManager &configManager, SuplaConfigESP &configESP) {
 
-  Serial.println(this->configESP.configModeESP);
-  if (this->configESP.configModeESP == normal) {
+  _configManager = configManager;
+  _configESP = configESP;
+  
+  Serial.println(_configESP.configModeESP);
+  if (_configESP.configModeESP == normal) {
     this->gui_color = GUI_BLUE;
   } else {
     this->gui_color = GUI_GREEN;
   }
 
-  strcpy(this->www_username, this->configManager.get(KEY_LOGIN)->getValue());
-  strcpy(this->www_password, this->configManager.get(KEY_LOGIN_PASS)->getValue());
+  strcpy(this->www_username, _configManager.get(KEY_LOGIN)->getValue());
+  strcpy(this->www_password, _configManager.get(KEY_LOGIN_PASS)->getValue());
 
-  // String www_username1 = String(this->configManager.getLogin());
-  // String www_password1 = String(this->configManager.getLoginPassword());
+  // String www_username1 = String(_configManager.getLogin());
+  // String www_password1 = String(_configManager.getLoginPassword());
 
   //this->www_username = strcpy((char*)malloc(www_username1.length() + 1), www_username1.c_str());
   //this->www_password = strcpy((char*)malloc(www_password1.length() + 1), www_password1.c_str());
@@ -60,7 +63,6 @@ void SuplaWebServer::begin(const SuplaConfigManager& configManager, const SuplaC
   httpUpdater.setup(&httpServer, UPDATE_PATH, www_username, www_password);
   httpServer.begin();
 }
-
 
 void SuplaWebServer::createWebServer() {
 
@@ -71,7 +73,7 @@ void SuplaWebServer::createWebServer() {
 }
 
 void SuplaWebServer::handle() {
-  if (configESP.configModeESP == normal) {
+  if (_configESP.configModeESP == normal) {
     if (!httpServer.authenticate(this->www_username, this->www_password))
       return httpServer.requestAuthentication();
   }
@@ -79,19 +81,19 @@ void SuplaWebServer::handle() {
 }
 
 void SuplaWebServer::set() {
-  if (configESP.configModeESP == normal) {
+  if (_configESP.configModeESP == normal) {
     if (!httpServer.authenticate(this->www_username, this->www_password))
       return httpServer.requestAuthentication();
   }
 
-  this->configManager.set(KEY_WIFI_SSID, httpServer.arg("wifi_ssid").c_str());
-  this->configManager.set(KEY_WIFI_PASS, httpServer.arg("wifi_pass").c_str());
-  this->configManager.set(KEY_LOGIN, httpServer.arg("modul_login").c_str());
-  this->configManager.set(KEY_LOGIN_PASS, httpServer.arg("modul_pass").c_str());
-  this->configManager.set(KEY_SUPLA_SERVER, httpServer.arg("supla_server").c_str());
-  this->configManager.set(KEY_SUPLA_EMAIL, httpServer.arg("supla_email").c_str());
+  _configManager.set(KEY_WIFI_SSID, httpServer.arg("wifi_ssid").c_str());
+  _configManager.set(KEY_WIFI_PASS, httpServer.arg("wifi_pass").c_str());
+  _configManager.set(KEY_LOGIN, httpServer.arg("modul_login").c_str());
+  _configManager.set(KEY_LOGIN_PASS, httpServer.arg("modul_pass").c_str());
+  _configManager.set(KEY_SUPLA_SERVER, httpServer.arg("supla_server").c_str());
+  _configManager.set(KEY_SUPLA_EMAIL, httpServer.arg("supla_email").c_str());
 
-  this->configManager.set(KEY_GPIO_THERMOMETR, httpServer.arg("gpio_thermometr").c_str());
+  _configManager.set(KEY_GPIO_THERMOMETR, httpServer.arg("gpio_thermometr").c_str());
 
   for (int i = 0; i < httpServer.arg("max_ds18b20").toInt(); i++) {
     String ds_key = KEY_DS;
@@ -99,30 +101,30 @@ void SuplaWebServer::set() {
     ds_key += i;
     ds_name_key += i;
 
-    if (i >= this->configManager.get(KEY_MAX_DS18B20)->getValueInt()) {
-      this->configManager.deleteKey(ds_key.c_str());
-      this->configManager.deleteKey(ds_name_key.c_str());
+    if (i >= _configManager.get(KEY_MAX_DS18B20)->getValueInt()) {
+      _configManager.deleteKey(ds_key.c_str());
+      _configManager.deleteKey(ds_name_key.c_str());
 
-      this->configManager.addKey(ds_key.c_str(), MAX_DS18B20_ADDRESS_HEX);
-      this->configManager.addKey(ds_name_key.c_str(), MAX_DS18B20_NAME);
+      _configManager.addKey(ds_key.c_str(), MAX_DS18B20_ADDRESS_HEX);
+      _configManager.addKey(ds_name_key.c_str(), MAX_DS18B20_NAME);
     }
 
     String ds = "ds18b20_channel_id_";
     String ds_name = "ds18b20_name_id_";
     ds += i;
     ds_name += i;
-    this->configManager.set(ds_key.c_str(), httpServer.arg(ds).c_str());
-    this->configManager.set(ds_name_key.c_str(), httpServer.arg(ds_name).c_str());
+    _configManager.set(ds_key.c_str(), httpServer.arg(ds).c_str());
+    _configManager.set(ds_name_key.c_str(), httpServer.arg(ds_name).c_str());
   }
 
-  this->configManager.set(KEY_MAX_DS18B20, httpServer.arg("max_ds18b20").c_str());
+  _configManager.set(KEY_MAX_DS18B20, httpServer.arg("max_ds18b20").c_str());
 
-  this->configManager.save();
+  _configManager.save();
   httpServer.send(200, "text/html", supla_webpage_start(1));
 }
 
 void SuplaWebServer::search() {
-  if (configESP.configModeESP == normal) {
+  if (_configESP.configModeESP == normal) {
     if (!httpServer.authenticate(www_username, www_password))
       return httpServer.requestAuthentication();
   }
@@ -130,11 +132,11 @@ void SuplaWebServer::search() {
 }
 
 void SuplaWebServer::setSearch() {
-  if (configESP.configModeESP == normal) {
+  if (_configESP.configModeESP == normal) {
     if (!httpServer.authenticate(www_username, www_password))
       return httpServer.requestAuthentication();
   }
-  for (int i = 0; i < this->configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
+  for (int i = 0; i < _configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
     String ds_key = KEY_DS;
     ds_key += i;
 
@@ -143,11 +145,11 @@ void SuplaWebServer::setSearch() {
 
     String address = httpServer.arg(ds).c_str();
     if (address != NULL) {
-      this->configManager.set(ds_key.c_str(), address.c_str());
+      _configManager.set(ds_key.c_str(), address.c_str());
     }
   }
 
-  if (!this->configManager.save()) {
+  if (!_configManager.save()) {
     Serial.println("Nie udało się zapisać ustawień");
   } else {
     Serial.println("Zapisano nowe ustawienia");
@@ -173,24 +175,24 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += "<script type='text/javascript'>setTimeout(function(){var element =  document.getElementById('msg');if ( element != null ) element.style.visibility = 'hidden';},3200);</script>";
   content += "<div class='s'>";
   content += getLogoSupla();
-  content += "<h1><center>" + String(this->configManager.get(KEY_HOST_NAME)->getValue()) + " by krycha</center></h1>";
+  content += "<h1><center>" + String(_configManager.get(KEY_HOST_NAME)->getValue()) + " by krycha</center></h1>";
   // content += "<font size='2'>STATUS: " + supla_status.status_msg + "</font><br>";
-  content += "<font size='2'>GUID:  " + String(this->configManager.get(KEY_SUPLA_GUID)->getValueHex(SUPLA_GUID_SIZE)) + "</font><br>";
+  content += "<font size='2'>GUID:  " + String(_configManager.get(KEY_SUPLA_GUID)->getValueHex(SUPLA_GUID_SIZE)) + "</font><br>";
   content += "<font size='2'>MAC:  " + String(getMacAddress()) + "</font><br>";
   //content += "<font size='2'>RSSI: " + read_rssi() + "</font>";
   content += "<form method='post' action='set0'>";
   content += "<div class='w'>";
   content += "<h3>Ustawienia WIFI</h3>";
-  content += "<i><input name='wifi_ssid' value='" + String(this->configManager.get(KEY_WIFI_SSID)->getValue()) + "'length=";
+  content += "<i><input name='wifi_ssid' value='" + String(_configManager.get(KEY_WIFI_SSID)->getValue()) + "'length=";
   content += MAX_SSID;
   content += "><label>Nazwa sieci</label></i>";
   content += "<i><input name='wifi_pass' ";
-  if (configESP.configModeESP != normal) {
+  if (_configESP.configModeESP != normal) {
     content += "type='password' ";
   }
-  content += "value='" + String(this->configManager.get(KEY_WIFI_PASS)->getValue()) + "'";
+  content += "value='" + String(_configManager.get(KEY_WIFI_PASS)->getValue()) + "'";
 
-  if (this->configManager.get(KEY_WIFI_PASS)->getValue() != 0) {
+  if (_configManager.get(KEY_WIFI_PASS)->getValue() != 0) {
     content += ">";
   }
   else {
@@ -203,8 +205,8 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += "<label>Hasło</label></i>";
   content += "<i><input name='supla_hostname' value='";
   String def = DEFAULT_HOSTNAME;
-  if (def != this->configManager.get(KEY_HOST_NAME)->getValue()) {
-    content += this->configManager.get(KEY_HOST_NAME)->getValue();
+  if (def != _configManager.get(KEY_HOST_NAME)->getValue()) {
+    content += _configManager.get(KEY_HOST_NAME)->getValue();
   }
   content += "'length=";
   content += MAX_HOSTNAME;
@@ -212,16 +214,16 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += "</div>";
   content += "<div class='w'>";
   content += "<h3>Ustawienia administratora</h3>";
-  content += "<i><input name='modul_login' value='" + String(this->configManager.get(KEY_LOGIN)->getValue()) + "'length=";
+  content += "<i><input name='modul_login' value='" + String(_configManager.get(KEY_LOGIN)->getValue()) + "'length=";
   content += MAX_MLOGIN;
   content += "><label>Login</label></i>";
   content += "<i><input name='modul_pass' ";
-  if (configESP.configModeESP != normal) {
+  if (_configESP.configModeESP != normal) {
     content += "type='password' ";
   }
-  content += "value='" + String(this->configManager.get(KEY_LOGIN_PASS)->getValue()) + "'";
+  content += "value='" + String(_configManager.get(KEY_LOGIN_PASS)->getValue()) + "'";
 
-  if (this->configManager.get(KEY_LOGIN_PASS)->getValue() != 0) {
+  if (_configManager.get(KEY_LOGIN_PASS)->getValue() != 0) {
     content += ">";
   }
   else {
@@ -235,17 +237,17 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += "</div>";
   content += "<div class='w'>";
   content += "<h3>Ustawienia SUPLA</h3>";
-  content += "<i><input name='supla_server' value='" + String(this->configManager.get(KEY_SUPLA_SERVER)->getValue()) + "'length=";
+  content += "<i><input name='supla_server' value='" + String(_configManager.get(KEY_SUPLA_SERVER)->getValue()) + "'length=";
   content += MAX_SUPLA_SERVER;
   content += "><label>Adres serwera</label></i>";
-  content += "<i><input name='supla_email' value='" + String(this->configManager.get(KEY_SUPLA_EMAIL)->getValue())  + "'length=";
+  content += "<i><input name='supla_email' value='" + String(_configManager.get(KEY_SUPLA_EMAIL)->getValue())  + "'length=";
   content += MAX_EMAIL;
   content += "><label>Email</label></i>";
   content += "</div>";
 
   content += "<div class='w'>";
   content += "<h3>Temperatura</h3>";
-  for (int i = 0; i < this->configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
+  for (int i = 0; i < _configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
     String ds_key = KEY_DS;
     String ds_name_key = KEY_DS_NAME;
     ds_key += i;
@@ -254,7 +256,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
     double temp = sensor[i]->getValue();
     content += "<i><input name='ds18b20_name_id_";
     content += i;
-    content += "' value='" + String(this->configManager.get(ds_name_key.c_str())->getValue()) + "' maxlength=";
+    content += "' value='" + String(_configManager.get(ds_name_key.c_str())->getValue()) + "' maxlength=";
     content += MAX_DS18B20_NAME;
     content += "><label>";
     content += "Nazwa ";
@@ -262,7 +264,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
     content += "</label></i>";
     content += "<i><input name='ds18b20_channel_id_";
     content += i;
-    content += "' value='" + String(this->configManager.get(ds_key.c_str())->getValue()) + "' maxlength=";
+    content += "' value='" + String(_configManager.get(ds_key.c_str())->getValue()) + "' maxlength=";
     content += MAX_DS18B20_ADDRESS_HEX;
     content += "><label>";
     if (temp != -275)content += temp;
@@ -276,7 +278,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
 
   content += "<div class='w'>";
   content += "<h3>Ustawienia modułu</h3>";
-  content += "<i><label>MAX DS18b20</label><input name='max_ds18b20' type='number' placeholder='0' step='1' min='1' max='20' value='" + String(this->configManager.get(KEY_MAX_DS18B20)->getValue()) + "'></i>";
+  content += "<i><label>MAX DS18b20</label><input name='max_ds18b20' type='number' placeholder='0' step='1' min='1' max='20' value='" + String(_configManager.get(KEY_MAX_DS18B20)->getValue()) + "'></i>";
 
   content += "<i><label>GIPO Thermometr</label><select name='gpio_thermometr'>";
   //Serial.println(sizeof(Supported_Gpio)/sizeof(const char*));
@@ -284,7 +286,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
     if (Supported_Gpio[i] != "") {
       content += "<option value='";
       content += i;
-      int select_gpio = this->configManager.get(KEY_GPIO_THERMOMETR)->getValueInt();
+      int select_gpio = _configManager.get(KEY_GPIO_THERMOMETR)->getValueInt();
       if (select_gpio == i) {
         content += "' selected>";
       }
@@ -325,19 +327,19 @@ String SuplaWebServer::supla_webpage_search(int save) {
   }
   content += "<div class='s'>";
   content += getLogoSupla();
-  content += "<h1><center>" + String(this->configManager.get(KEY_HOST_NAME)->getValue()) + " by krycha</center></h1>";
+  content += "<h1><center>" + String(_configManager.get(KEY_HOST_NAME)->getValue()) + " by krycha</center></h1>";
   content += "<br>";
   content += "<center>";
   content += "<div class='w'>";
   content += "<h3>Temperatura</h3>";
-  for (int i = 0; i < this->configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
+  for (int i = 0; i < _configManager.get(KEY_MAX_DS18B20)->getValueInt(); i++) {
     double temp = sensor[i]->getValue();
     String ds_key = KEY_DS;
     ds_key += i;
 
     content += "<i><input name='ds18b20_";
     content += i;
-    content += "' value='" + String(this->configManager.get(ds_key.c_str())->getValue()) + "' maxlength=";
+    content += "' value='" + String(this->_configManager.get(ds_key.c_str())->getValue()) + "' maxlength=";
     content += MAX_DS18B20_ADDRESS_HEX;
     content += " readonly><label>";
     if (temp != -275)content += temp;
@@ -407,3 +409,5 @@ String SuplaWebServer::getMacAddress() {
 
   return String(mac[0], HEX) + ":" + String(mac[1], HEX) + ":" + String(mac[2], HEX) + ":" + String(mac[3], HEX) + ":" + String(mac[4], HEX) + ":" + String(mac[5], HEX);
 }
+
+SuplaWebServer WebServer;

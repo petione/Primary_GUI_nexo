@@ -105,5 +105,5 @@ class SuplaConfigManager {
     ConfigOption *_options[CONFIG_MAX_OPTIONS];
 };
 
-//extern SuplaConfigManager configManager;
+extern SuplaConfigManager ConfigManager;
 #endif

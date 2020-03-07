@@ -15,31 +15,34 @@
 */
 
 #include "SuplaConfigESP.h"
+#include "SuplaConfigManager.h"
+#include "SuplaWebServer.h"
 
 SuplaConfigESP::SuplaConfigESP() {
   this->configModeESP = normal;
 }
 
-SuplaConfigESP::SuplaConfigESP(const SuplaConfigManager& configManager) {
-  this->configManager = configManager;
+SuplaConfigESP::SuplaConfigESP(SuplaConfigManager* configManager) {
+  _configManager = configManager;
+  this->configModeESP = normal;
 
-  if (!this->configManager.isDeviceConfigured()) {
+  if (!_configManager->isDeviceConfigured()) {
     this->configModeESP = mode_1;
-    this->configManager.setGUIDandAUTHKEY();
-    this->configManager.set(KEY_WIFI_SSID, "xxx");
-    this->configManager.set(KEY_WIFI_PASS, "xxx");
-    this->configManager.set(KEY_LOGIN, "admin");
-    this->configManager.set(KEY_LOGIN_PASS, "password");
-    this->configManager.set(KEY_SUPLA_SERVER, "xxx.supla.org");
-    this->configManager.set(KEY_SUPLA_EMAIL, "xxx@xxx.xxx");
+    _configManager->setGUIDandAUTHKEY();
+    _configManager->set(KEY_WIFI_SSID, "Gargulec");
+    _configManager->set(KEY_WIFI_PASS, "renaultmegane");
+    _configManager->set(KEY_LOGIN, "admin");
+    _configManager->set(KEY_LOGIN_PASS, "password");
+    _configManager->set(KEY_SUPLA_SERVER, "svr19.supla.org");
+    _configManager->set(KEY_SUPLA_EMAIL, "krystian.franieczek@gmail.com");
 
-    this->configManager.save();
+    _configManager->save();
+
+    this->configModeInit();
   }
 }
 
 void SuplaConfigESP::configModeInit() {
-  //  SuplaWebServer webServer;
-
   // supla_led_blinking(LED_CONFIG_PIN, 100);
   // my_mac_adress();
   Serial.print("Tryb konfiguracji: ");
@@ -50,12 +53,8 @@ void SuplaConfigESP::configModeInit() {
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(CONFIG_WIFI_NAME, CONFIG_WIFI_PASS);
   Serial.println("Tryb AP");
-  //webServer.begin();
+  //webServer->begin();
   Serial.println("Start Serwera");
-
-  if (this->configModeESP == mode_2) {
-    while (1) {
-      //  webServer.handleAPClient();
-    }
-  }
 }
+
+SuplaConfigESP ConfigESP;
