@@ -14,8 +14,8 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef SuplaSensor_h
-#define SuplaSensor_h
+#ifndef SuplaSensorDS18B20_h
+#define SuplaSensorDS18B20_h
 
 #include <Arduino.h>
 #include <DallasTemperature.h>
@@ -26,7 +26,7 @@
 
 class OneWireBus {
   public:
-    OneWireBus(uint8_t pinNumber);
+    OneWireBus(uint8_t pinNumberConfig);
     int8_t getIndex(uint8_t *deviceAddress);
 
     uint8_t pin;
@@ -54,5 +54,5 @@ class DS18B20: public Supla::Sensor::Thermometer {
     double lastValidValue;
 };
 
-extern std::vector <DS18B20 *> sensor;
-#endif //SuplaSensor_h
+extern std::vector <DS18B20 *> sensorDS;
+#endif //SuplaSensorDS18B20_h

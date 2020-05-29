@@ -14,27 +14,26 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <SPI.h>
-#include <SuplaDevice.h>
-#include <supla/sensor/esp_free_heap.h>
+#ifndef SuplaDevicePrimary_h
+#define SuplaDevicePrimary_h
 
-#include "SuplaDevicePrimary.h"
-#include "SuplaWebServer.h"
+#include <supla/control/relay.h>
+#include <supla/control/button.h>
+#include <vector>
 
-void setup() {
-  Serial.begin(74880);
+class SuplaDevicePrimaryClass {
+  public:
+    SuplaDevicePrimaryClass();
+    void begin();
+    void addRelayButton(int pinRelay, int pinButton);
+    void addDS18B20MultiThermometer(int pinNumber);
+    void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 
-  SuplaDevicePrimary.addRelayButton(5, 0);
-  SuplaDevicePrimary.addRelayButton(5, 14);
-  SuplaDevicePrimary.addDS18B20MultiThermometer(16);
-  SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD
+  private:
+};
 
-  Supla::Sensor::EspFreeHeap *esp = new Supla::Sensor::EspFreeHeap();
+extern std::vector <Supla::Control::Relay *> relay;
+extern std::vector <Supla::Control::Button *> button;
 
-  SuplaDevicePrimary.begin();
-}
-
-void loop() {
-  SuplaDevice.iterate();
-  WebServer.handleAPClient();
-}
+extern SuplaDevicePrimaryClass SuplaDevicePrimary;
+#endif //SuplaDevicePrimary_h

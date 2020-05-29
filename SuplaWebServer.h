@@ -20,11 +20,10 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <SuplaDevice.h>
-#include <vector>
 
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
-#include "SuplaSensor.h"
+#include <supla/channel.h>
 
 #define  GUI_BLUE               "#005c96"
 #define  GUI_GREEN              "#00D151"
@@ -39,41 +38,15 @@
 
 #define  UPDATE_PATH           "/firmware"
 
-class  SuplaConfigManager;
-class  SuplaConfigESP;
-
 class SuplaWebServer {
   public:
     SuplaWebServer();
-    void begin(SuplaConfigManager& configManager, SuplaConfigESP& configESP);
+    void begin();
     void handleAPClient();
 
   private:
-    SuplaConfigManager _configManager;
-    SuplaConfigESP _configESP;
-    
     char* gui_color;
     char* gui_box_shadow;
-    const char * Supported_Gpio[18] = {
-      "GPIO0 (D3)",
-      "GPIO1 (TX)",
-      "GPIO2 (D4)",
-      "GPIO3 (RX)",
-      "GPIO4 (D2)",
-      "GPIO5 (D1)",
-      "",
-      "",
-      "",
-      "GPIO9 (FL-ESP8285)",
-      "GPIO10 (FL-ESP8285)",
-      "",
-      "GPIO12 (D6)",
-      "GPIO13 (D7)",
-      "GPIO14 (D5)",
-      "GPIO15 (D8)",
-      "GPIO16 (D0)",
-      "BRAK"
-    };
 
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
@@ -88,14 +61,18 @@ class SuplaWebServer {
     void set();
     void search();
     void setSearch();
-
     void handleNotFound();
     void createWebServer();
     String supla_webpage_start(int save);
     String supla_webpage_search(int save);
+    void supla_webpage_reboot();
 
     String getLogoSupla(void);
     String getMacAddress();
+
+    String showDS18B20();
+
+    void rebootESP();
 };
 
 extern SuplaWebServer WebServer;

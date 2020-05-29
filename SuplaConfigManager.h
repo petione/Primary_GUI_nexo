@@ -26,10 +26,9 @@
 #define KEY_HOST_NAME           "hostName"
 #define KEY_SUPLA_SERVER        "suplaServer"
 #define KEY_SUPLA_EMAIL         "suplaEmail"
-#define KEY_GPIO_THERMOMETR     "gipoTherm"
-#define KEY_MAX_DS18B20         "ds18b20"
 #define KEY_DS                  "ds"
 #define KEY_DS_NAME             "dsName"
+#define KEY_MAX_DS18B20         "ds18b20"
 
 #define  MAX_GUID                 SUPLA_GUID_SIZE
 #define  MAX_AUTHKEY              SUPLA_GUID_SIZE
@@ -44,8 +43,6 @@
 #define  MAX_DS18B20_ADDRESS_HEX  16
 #define  MAX_DS18B20_ADDRESS      8
 #define  MAX_DS18B20_NAME         8
-
-#define GIPO_NONE                 16
 
 #define E_CONFIG_OK               0
 #define E_CONFIG_FS_ACCESS        1
@@ -93,6 +90,7 @@ class SuplaConfigManager {
     uint8_t load();
     uint8_t loadItem(const char *key);
     uint8_t save();
+    void showAllValue();
 
     ConfigOption *get(const char *key);
     bool set(const char *key, const char *value);

@@ -77,16 +77,18 @@ void ConfigOption::setValue(const char *value) {
   }
 }
 
+//
+//class SuplaConfigManager
+//
 SuplaConfigManager::SuplaConfigManager() {
+
   if (SPIFFS.begin()) {
     Serial.println(F("\nSPIFFS mounted"));
   } else {
     Serial.println(F("\nFailed to mount SPIFFS"));
   }
   _optionCount = 0;
-}
 
-void SuplaConfigManager::begin() {
   this->addKey(KEY_SUPLA_GUID, MAX_GUID);
   this->addKey(KEY_SUPLA_AUTHKEY, MAX_AUTHKEY);
   this->addKey(KEY_WIFI_SSID, MAX_SSID);
@@ -96,7 +98,6 @@ void SuplaConfigManager::begin() {
   this->addKey(KEY_HOST_NAME, MAX_HOSTNAME);
   this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
   this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
-  this->addKey(KEY_GPIO_THERMOMETR, sizeof(int));
 
   this->addKeyAndRead(KEY_MAX_DS18B20, "1", sizeof(int));
   for (int i = 0; i < this->get(KEY_MAX_DS18B20)->getValueInt(); i++)
@@ -109,12 +110,31 @@ void SuplaConfigManager::begin() {
     this->addKey(ds_key.c_str(), MAX_DS18B20_ADDRESS_HEX);
     this->addKey(ds_name_key.c_str(), MAX_DS18B20_NAME);
   }
+}
 
-  this->load();
+void SuplaConfigManager::begin() {
+  switch (this->load()) {
+    case E_CONFIG_OK:
+      Serial.println("Config read");
+      this->showAllValue();
+      return;
+    case E_CONFIG_FS_ACCESS:
+      Serial.println("E_CONFIG_FS_ACCESS: Couldn't access file system");
+      return;
+    case E_CONFIG_FILE_NOT_FOUND:
+      Serial.println("E_CONFIG_FILE_NOT_FOUND: File not found");
+      return;
+    case E_CONFIG_FILE_OPEN:
+      Serial.println("E_CONFIG_FILE_OPEN: Couldn't open file");
+      return;
+    case E_CONFIG_PARSE_ERROR:
+      Serial.println("E_CONFIG_PARSE_ERROR: File was not parsable");
+      return;
+  }
 }
 
 uint8_t SuplaConfigManager::addKey(const char *key, int maxLength) {
-  return addKey(key, NULL, maxLength);
+  return addKey(key, "", maxLength);
 }
 
 uint8_t SuplaConfigManager::addKey(const char *key, const char *value, int maxLength) {
@@ -130,10 +150,8 @@ uint8_t SuplaConfigManager::addKey(const char *key, const char *value, int maxLe
 uint8_t SuplaConfigManager::addKeyAndRead(const char *key, const char *value, int maxLength) {
   addKey(key, maxLength);
   if (this->loadItem(key) != E_CONFIG_OK) {
-    Serial.println("ustawiono wartość domyślną");
     this->set(key, value);
   }
-
   return E_CONFIG_OK;
 }
 
@@ -164,9 +182,9 @@ uint8_t SuplaConfigManager::load() {
           length += _options[i]->getLength();
         }
 
-        if (length != configFile.size()) {
-          return E_CONFIG_PARSE_ERROR;
-        }
+        // if (length != configFile.size()) {
+        //   return E_CONFIG_PARSE_ERROR;
+        // }
 
         uint8_t *content = (uint8_t *)malloc(sizeof(uint8_t) * length);
         configFile.read(content, length);
@@ -247,6 +265,7 @@ uint8_t SuplaConfigManager::save() {
     if (configFile) {
       uint8_t *content = (uint8_t *)malloc(sizeof(uint8_t) * length);
       for (i = 0; i < _optionCount; i++) {
+        Serial.println("save: " + String(_options[i]->getValue()));
         memcpy(content + offset, _options[i]->getValue(), _options[i]->getLength());
         offset += _options[i]->getLength();
       }
@@ -264,12 +283,18 @@ uint8_t SuplaConfigManager::save() {
   return E_CONFIG_FS_ACCESS;
 }
 
+void SuplaConfigManager::showAllValue() {
+  for (int i = 0; i < _optionCount; i++) {
+    Serial.println("Key:  " + String(_options[i]->getKey()) + " Value:  " + String(_options[i]->getValue()));
+  }
+}
+
 bool SuplaConfigManager::isDeviceConfigured() {
-  return strcmp(this->get(KEY_SUPLA_GUID)->getValue(), "") != 0 ||
-         strcmp(this->get(KEY_SUPLA_AUTHKEY)->getValue(), "") != 0 ||
-         strcmp(this->get(KEY_WIFI_SSID)->getValue(), "") != 0 ||
-         strcmp(this->get(KEY_WIFI_PASS)->getValue(), "") != 0 ||
-         strcmp(this->get(KEY_LOGIN)->getValue(), "") != 0;
+  return strcmp(this->get(KEY_SUPLA_GUID)->getValue(), "") == 0 ||
+         strcmp(this->get(KEY_SUPLA_AUTHKEY)->getValue(), "") == 0 ||
+         strcmp(this->get(KEY_WIFI_SSID)->getValue(), "") == 0 ||
+         strcmp(this->get(KEY_WIFI_PASS)->getValue(), "") == 0 ||
+         strcmp(this->get(KEY_LOGIN)->getValue(), "") == 0;
 }
 
 ConfigOption *SuplaConfigManager::get(const char *key) {
@@ -278,7 +303,6 @@ ConfigOption *SuplaConfigManager::get(const char *key) {
       return _options[i];
     }
   }
-
   return NULL;
 }
 
@@ -293,6 +317,14 @@ bool SuplaConfigManager::set(const char *key, const char *value) {
 }
 
 void SuplaConfigManager::setGUIDandAUTHKEY() {
+
+  if (strcmp(this->get(KEY_SUPLA_GUID)->getValue(), "") != 0 ||
+      strcmp(this->get(KEY_SUPLA_AUTHKEY)->getValue(), "") != 0) {
+    return;
+  }
+
+  Serial.println("wygenerowanao GUID I AUTHKEY");
+
   char mac[6];
   int a;
 

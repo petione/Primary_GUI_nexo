@@ -14,22 +14,22 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include "SuplaSensor.h"
+#include "SuplaSensorDS18B20.h"
 
-OneWireBus::OneWireBus(uint8_t pinNumber)
-  : oneWire(pinNumber), pin(pinNumber), nextBus(nullptr), lastReadTime(0) {
-  supla_log(LOG_DEBUG, "Initializing OneWire bus at pin %d", pinNumber);
+OneWireBus::OneWireBus(uint8_t pinNumberConfig)
+  : oneWire(pinNumberConfig), pin(pinNumberConfig), nextBus(nullptr), lastReadTime(0) {
+  supla_log(LOG_DEBUG, "Initializing OneWire bus at pin %d", pinNumberConfig);
   sensors.setOneWire(&oneWire);
   sensors.begin();
   if (sensors.isParasitePowerMode()) {
-    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is ON", pinNumber);
+    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is ON", pinNumberConfig);
   } else {
-    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is OFF", pinNumber);
+    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is OFF", pinNumberConfig);
   }
 
   supla_log(LOG_DEBUG,
             "OneWire(pin %d) Found %d devices:",
-            pinNumber,
+            pinNumberConfig,
             sensors.getDeviceCount());
 
   // report parasite power requirements
@@ -162,3 +162,4 @@ uint8_t  DS18B20::getPin() {
 }
 
 OneWireBus *DS18B20::oneWireBus = nullptr;
+std::vector <DS18B20 *> sensorDS;

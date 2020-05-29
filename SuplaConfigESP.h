@@ -22,6 +22,12 @@
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
+#include <SuplaDevice.h>
+#include <supla/control/button.h>
+
+#include "SuplaConfigManager.h"
+
+enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 
 typedef enum _configModeESP {
   normal,
@@ -29,19 +35,42 @@ typedef enum _configModeESP {
   mode_2
 };
 
-class SuplaConfigManager;
+typedef struct {
+  int status;
+  const char *msg;
+  const char *old_msg;
+} _supla_status;
 
-class SuplaConfigESP {
+class SuplaConfigESP : public Supla::Triggerable {
   public:
     SuplaConfigESP();
-    SuplaConfigESP(SuplaConfigManager* configManager);
 
-    void configModeInit();
+    void begin();
+    void addConfigESP(int _pinNumberConfig, int _pinLedConfig, int _modeConfigButton);
+    void trigger(int event, int action);
+
+    void ledBlinking(int time);
+    void ledBlinkingStop(void);
+    
+    int getPinLedConfig();
+    int getModeConfigButton();
+    const char *getLastStatusSupla();
+
     _configModeESP configModeESP;
+    _supla_status supla_status;
 
   private:
-    SuplaConfigManager *_configManager;
+    int pinNumberConfig;
+    int pinLedConfig;
+    int modeConfigButton;
+    int countPresses = 0;
+    unsigned long cnfigChangeTimeMs = 0;
+    void configModeInit();
+    ETSTimer led_timer;
 };
+
+void ledBlinking_func(void *timer_arg);
+void status_func(int status, const char *msg);
 
 extern SuplaConfigESP ConfigESP;
 #endif //SuplaConfigESP_h
