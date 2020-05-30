@@ -17,6 +17,9 @@
 #include "SuplaWebServer.h"
 #include "SuplaConfigManager.h"
 
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <SuplaDevice.h>
 
 SuplaConfigESP::SuplaConfigESP() {
   configModeESP = normal;

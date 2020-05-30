@@ -17,9 +17,12 @@
 #ifndef SuplaDevicePrimary_h
 #define SuplaDevicePrimary_h
 
+#include <vector>
 #include <supla/control/relay.h>
 #include <supla/control/button.h>
-#include <vector>
+
+#include "SuplaConfigESP.h"
+
 
 class SuplaDevicePrimaryClass {
   public:

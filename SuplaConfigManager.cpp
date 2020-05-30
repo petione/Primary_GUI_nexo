@@ -15,6 +15,8 @@
 */
 
 #include "SuplaConfigManager.h"
+#include <SuplaDevice.h>
+#include "FS.h"
 
 #define CONFIG_FILE_PATH "/config.dat"
 

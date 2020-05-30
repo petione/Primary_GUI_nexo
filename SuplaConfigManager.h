@@ -17,6 +17,10 @@
 #ifndef SuplaConfigManager_h
 #define SuplaConfigManager_h
 
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
 #define KEY_SUPLA_GUID          "GUID"
 #define KEY_SUPLA_AUTHKEY       "AUTHKEY"
 #define KEY_WIFI_SSID           "wifiSSID"
@@ -52,13 +56,6 @@
 #define E_CONFIG_MAX              5
 
 #define CONFIG_MAX_OPTIONS        30
-
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-
-#include <SuplaDevice.h>
-#include "FS.h"
 
 class ConfigOption {
   public:

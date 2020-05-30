@@ -14,12 +14,13 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 #include <supla/network/esp_wifi.h>
+#include <supla/sensor/DS18B20.h>
 
 #include "SuplaDevicePrimary.h"
 #include "SuplaSensorDS18B20.h"
-#include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
 #include "SuplaWebServer.h"
+
 
 SuplaDevicePrimaryClass::SuplaDevicePrimaryClass() {
 }

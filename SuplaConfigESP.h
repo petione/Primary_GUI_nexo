@@ -17,15 +17,10 @@
 #ifndef SuplaConfigESP_h
 #define SuplaConfigESP_h
 
-#define CONFIG_WIFI_NAME  "SUPLA"
-#define CONFIG_WIFI_PASS  ""
-
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <SuplaDevice.h>
 #include <supla/control/button.h>
 
-#include "SuplaConfigManager.h"
+#define CONFIG_WIFI_NAME  "SUPLA"
+#define CONFIG_WIFI_PASS  ""
 
 enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 
