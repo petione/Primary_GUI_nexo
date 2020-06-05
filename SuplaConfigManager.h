@@ -17,6 +17,10 @@
 #ifndef SuplaConfigManager_h
 #define SuplaConfigManager_h
 
+#define  DEFAULT_HOSTNAME      "Primary GUI"
+#define  DEFAULT_LOGIN         "admin"
+#define  DEFAULT_LOGIN_PASS    "password"
+
 #define KEY_SUPLA_GUID          "GUID"
 #define KEY_SUPLA_AUTHKEY       "AUTHKEY"
 #define KEY_WIFI_SSID           "wifiSSID"
@@ -82,7 +86,6 @@ class SuplaConfigManager {
 
   public:
     SuplaConfigManager();
-    void begin();
     uint8_t addKey(const char *key, int maxLength);
     uint8_t addKey(const char *key, const char *value, int maxLength);
     uint8_t addKeyAndRead(const char *key, const char *value, int maxLength);
@@ -103,5 +106,5 @@ class SuplaConfigManager {
     ConfigOption *_options[CONFIG_MAX_OPTIONS];
 };
 
-extern SuplaConfigManager ConfigManager;
+extern SuplaConfigManager *ConfigManager;
 #endif

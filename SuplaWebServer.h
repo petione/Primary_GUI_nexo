@@ -28,35 +28,18 @@
 #define  GUI_BLUE               "#005c96"
 #define  GUI_GREEN              "#00D151"
 
-#define  DEFAULT_HOSTNAME      "Primary GUI"
-#define  SUPLA_DEVICE_NAME     "SUPLA TESTY"
-#define  CONFIG_WIFI_LOGIN     "MODUL SUPLA"
-#define  CONFIG_WIFI_PASSWORD  ""
-
 #define  DEFAULT_LOGIN         "admin"
 #define  DEFAULT_PASSWORD      "password"
 
 #define  UPDATE_PATH           "/firmware"
 
-class SuplaWebServer {
+class SuplaWebServer : public Supla::Element {
   public:
     SuplaWebServer();
     void begin();
-    void handleAPClient();
 
   private:
-    char* gui_color;
-    char* gui_box_shadow;
-
-    char www_username[MAX_MLOGIN];
-    char www_password[MAX_MPASSWORD];
-    char* update_path = UPDATE_PATH;
-
-    String supla_webpage_save(void);
-
-    ESP8266WebServer httpServer = {80};
-    ESP8266HTTPUpdateServer httpUpdater;
-
+    void iterateAlways();
     void handle();
     void set();
     void search();
@@ -73,7 +56,18 @@ class SuplaWebServer {
     String showDS18B20();
 
     void rebootESP();
+    char* gui_color;
+    char* gui_box_shadow;
+
+    char www_username[MAX_MLOGIN];
+    char www_password[MAX_MPASSWORD];
+    char* update_path = UPDATE_PATH;
+
+    String supla_webpage_save(void);
+
+    ESP8266WebServer httpServer = {80};
+    ESP8266HTTPUpdateServer httpUpdater;
 };
 
-extern SuplaWebServer WebServer;
+extern SuplaWebServer *WebServer;
 #endif //SuplaWebServer_h

@@ -21,6 +21,8 @@
 #include <supla/control/button.h>
 #include <vector>
 
+enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
+
 class SuplaDevicePrimaryClass {
   public:
     SuplaDevicePrimaryClass();

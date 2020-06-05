@@ -81,7 +81,6 @@ void ConfigOption::setValue(const char *value) {
 //class SuplaConfigManager
 //
 SuplaConfigManager::SuplaConfigManager() {
-
   if (SPIFFS.begin()) {
     Serial.println(F("\nSPIFFS mounted"));
   } else {
@@ -95,7 +94,7 @@ SuplaConfigManager::SuplaConfigManager() {
   this->addKey(KEY_WIFI_PASS, MAX_PASSWORD);
   this->addKey(KEY_LOGIN, MAX_MLOGIN);
   this->addKey(KEY_LOGIN_PASS, MAX_MPASSWORD);
-  this->addKey(KEY_HOST_NAME, MAX_HOSTNAME);
+  this->addKey(KEY_HOST_NAME, DEFAULT_HOSTNAME, MAX_HOSTNAME);
   this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
   this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
 
@@ -110,9 +109,7 @@ SuplaConfigManager::SuplaConfigManager() {
     this->addKey(ds_key.c_str(), MAX_DS18B20_ADDRESS_HEX);
     this->addKey(ds_name_key.c_str(), MAX_DS18B20_NAME);
   }
-}
 
-void SuplaConfigManager::begin() {
   switch (this->load()) {
     case E_CONFIG_OK:
       Serial.println("Config read");
@@ -366,4 +363,4 @@ void SuplaConfigManager::setGUIDandAUTHKEY() {
 
 }
 
-SuplaConfigManager ConfigManager;
+SuplaConfigManager *ConfigManager;

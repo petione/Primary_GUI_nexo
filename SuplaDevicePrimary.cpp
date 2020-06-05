@@ -22,23 +22,26 @@
 #include "SuplaWebServer.h"
 
 SuplaDevicePrimaryClass::SuplaDevicePrimaryClass() {
+  ConfigManager = new SuplaConfigManager();
+  ConfigESP = new SuplaConfigESP();
+  WebServer = new SuplaWebServer();
 }
 
 void SuplaDevicePrimaryClass::begin() {
-  ConfigManager.begin();
-  ConfigESP.begin();
-  WebServer.begin();
-  
-  Supla::ESPWifi *wifi = new Supla::ESPWifi(ConfigManager.get(KEY_WIFI_SSID)->getValue(),
-      ConfigManager.get(KEY_WIFI_PASS)->getValue());
-  wifi->setBufferSizes(1024, 256);
-  
-  //wifi->enableSSL(false);
+  Supla::ESPWifi *wifi = new Supla::ESPWifi(ConfigManager->get(KEY_WIFI_SSID)->getValue(),
+      ConfigManager->get(KEY_WIFI_PASS)->getValue());
+  // wifi->setBufferSizes(1024, 256);
 
-  SuplaDevice.begin((char*)ConfigManager.get(KEY_SUPLA_GUID)->getValue(),      // Global Unique Identifier
-                    (char*)ConfigManager.get(KEY_SUPLA_SERVER)->getValue(),    // SUPLA server address
-                    (char*)ConfigManager.get(KEY_SUPLA_EMAIL)->getValue(),     // Email address used to login to Supla Cloud
-                    (char*)ConfigManager.get(KEY_SUPLA_AUTHKEY)->getValue());  // Authorization key
+  wifi->enableSSL(false);
+
+  SuplaDevice.setName((char*)ConfigManager->get(KEY_HOST_NAME)->getValue());
+
+  SuplaDevice.begin((char*)ConfigManager->get(KEY_SUPLA_GUID)->getValue(),      // Global Unique Identifier
+                    (char*)ConfigManager->get(KEY_SUPLA_SERVER)->getValue(),    // SUPLA server address
+                    (char*)ConfigManager->get(KEY_SUPLA_EMAIL)->getValue(),     // Email address used to login to Supla Cloud
+                    (char*)ConfigManager->get(KEY_SUPLA_AUTHKEY)->getValue());  // Authorization key
+
+  WebServer->begin();
 }
 
 void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton) {
@@ -49,15 +52,15 @@ void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton) {
 }
 
 void SuplaDevicePrimaryClass::addDS18B20MultiThermometer(int pinNumber) {
-  for (int i = 0; i < ConfigManager.get(KEY_MAX_DS18B20)->getValueInt(); ++i) {
+  for (int i = 0; i < ConfigManager->get(KEY_MAX_DS18B20)->getValueInt(); ++i) {
     String ds_key = KEY_DS;
     ds_key += i;
-    sensorDS.push_back(new DS18B20(pinNumber, ConfigManager.get(ds_key.c_str())->getValueBin(MAX_DS18B20_ADDRESS)));
+    sensorDS.push_back(new DS18B20(pinNumber, ConfigManager->get(ds_key.c_str())->getValueBin(MAX_DS18B20_ADDRESS)));
   }
 }
 
 void  SuplaDevicePrimaryClass::addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton) {
-  ConfigESP.addConfigESP(pinNumberConfig, pinLedConfig, modeConfigButton);
+  ConfigESP->addConfigESP(pinNumberConfig, pinLedConfig, modeConfigButton);
 }
 
 std::vector <Supla::Control::Relay *> relay;

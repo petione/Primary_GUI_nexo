@@ -29,12 +29,11 @@ void setup() {
   SuplaDevicePrimary.addDS18B20MultiThermometer(16);
   SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD
 
-  Supla::Sensor::EspFreeHeap *esp = new Supla::Sensor::EspFreeHeap();
+  new Supla::Sensor::EspFreeHeap();
 
   SuplaDevicePrimary.begin();
 }
 
 void loop() {
   SuplaDevice.iterate();
-  WebServer.handleAPClient();
 }
