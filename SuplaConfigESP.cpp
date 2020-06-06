@@ -88,10 +88,8 @@ void SuplaConfigESP::trigger(int event, int action) {
 void SuplaConfigESP::configModeInit() {
   configModeESP = CONFIG_MODE;
   ledBlinking(100);
-  Serial.println("Configuration mode");
-  WiFi.softAPdisconnect(true);
-  WiFi.disconnect(true);
-  WiFi.mode(WIFI_AP_STA);
+  // WiFi.softAPdisconnect(true);
+  // WiFi.disconnect(true);
 
   Serial.print("Creating Access Point");
   Serial.print("Setting mode ... ");

@@ -32,10 +32,9 @@ class SuplaDevicePrimaryClass {
     void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 
   private:
+    std::vector <Supla::Control::Relay *> relay;
+    std::vector <Supla::Control::Button *> button;
 };
-
-extern std::vector <Supla::Control::Relay *> relay;
-extern std::vector <Supla::Control::Button *> button;
 
 extern SuplaDevicePrimaryClass SuplaDevicePrimary;
 #endif //SuplaDevicePrimary_h

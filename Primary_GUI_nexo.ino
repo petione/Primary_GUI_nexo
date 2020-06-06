@@ -27,7 +27,7 @@ void setup() {
   SuplaDevicePrimary.addRelayButton(5, 0);
   SuplaDevicePrimary.addRelayButton(5, 14);
   SuplaDevicePrimary.addDS18B20MultiThermometer(16);
-  SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD
+  SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
 
   new Supla::Sensor::EspFreeHeap();
 

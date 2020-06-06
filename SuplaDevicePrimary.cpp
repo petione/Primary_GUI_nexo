@@ -63,7 +63,7 @@ void  SuplaDevicePrimaryClass::addConfigESP(int pinNumberConfig, int pinLedConfi
   ConfigESP->addConfigESP(pinNumberConfig, pinLedConfig, modeConfigButton);
 }
 
-std::vector <Supla::Control::Relay *> relay;
-std::vector <Supla::Control::Button *> button;
+//std::vector <Supla::Control::Relay *> relay;
+//std::vector <Supla::Control::Button *> button;
 
 SuplaDevicePrimaryClass SuplaDevicePrimary;
