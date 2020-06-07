@@ -57,11 +57,22 @@ class SuplaWebServer : public Supla::Element {
 
     void rebootESP();
     char* gui_color;
-    char* gui_box_shadow;
+    char* gui_box_shadow = "box-shadow:0 1px 30px rgba(0,0,0,.9)";
 
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
     char* update_path = UPDATE_PATH;
+    char* Supported_Button[3] = {
+      "ON_PRESS",
+      "ON_RELEASE",
+      "ON_CHANGE"
+    };
+
+    char* Supported_RelayFlag[3] = {
+      "TURN_ON",
+      "TURN_OFF",
+      "TOGGLE"
+    };
 
     String supla_webpage_save(void);
 

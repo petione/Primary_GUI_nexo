@@ -41,6 +41,7 @@ class SuplaConfigESP : public Supla::Triggerable {
 
     void addConfigESP(int _pinNumberConfig, int _pinLedConfig, int _modeConfigButton);
     void trigger(int event, int action);
+    void rebootESP();
 
     const char *getLastStatusSupla();
 

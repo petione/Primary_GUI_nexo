@@ -33,6 +33,8 @@
 #define KEY_DS                  "ds"
 #define KEY_DS_NAME             "dsName"
 #define KEY_MAX_DS18B20         "ds18b20"
+#define KEY_TYPE_BUTTON         "typeButton"
+#define KEY_TYPE_RELAY          "typeRelay"
 
 #define  MAX_GUID                 SUPLA_GUID_SIZE
 #define  MAX_AUTHKEY              SUPLA_GUID_SIZE
@@ -47,6 +49,8 @@
 #define  MAX_DS18B20_ADDRESS_HEX  16
 #define  MAX_DS18B20_ADDRESS      8
 #define  MAX_DS18B20_NAME         8
+#define  MAX_TYPE_BUTTON          4
+#define  MAX_TYPE_RELAY           4
 
 #define E_CONFIG_OK               0
 #define E_CONFIG_FS_ACCESS        1
@@ -72,7 +76,8 @@ class ConfigOption {
     int getValueInt();
     uint8_t *getValueBin(size_t size);
     const char *getValueHex(size_t size);
-    
+    int getValueElement(int element);
+
     int getLength();
     void setValue(const char *value);
 
@@ -97,10 +102,11 @@ class SuplaConfigManager {
 
     ConfigOption *get(const char *key);
     bool set(const char *key, const char *value);
+    bool setElement(const char *key, const char value);
 
     bool isDeviceConfigured();
     void setGUIDandAUTHKEY();
-    
+
   private:
     int _optionCount;
     ConfigOption *_options[CONFIG_MAX_OPTIONS];

@@ -33,6 +33,10 @@ void SuplaDevicePrimaryClass::begin() {
   // wifi->setBufferSizes(1024, 256);
 
   wifi->enableSSL(false);
+  
+  //String supla_hostname = ConfigManager->get(KEY_HOST_NAME)->getValue();
+  //supla_hostname.replace(" ", "-");
+  //wifi->setHostName(supla_hostname.c_str());
 
   SuplaDevice.setName((char*)ConfigManager->get(KEY_HOST_NAME)->getValue());
 
@@ -41,14 +45,15 @@ void SuplaDevicePrimaryClass::begin() {
                     (char*)ConfigManager->get(KEY_SUPLA_EMAIL)->getValue(),     // Email address used to login to Supla Cloud
                     (char*)ConfigManager->get(KEY_SUPLA_AUTHKEY)->getValue());  // Authorization key
 
+  ConfigManager->showAllValue();
   WebServer->begin();
 }
 
-void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton) {
-  relay.push_back(new Supla::Control::Relay(pinRelay));
+void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton, bool highIsOn) {
+  relay.push_back(new Supla::Control::Relay(pinRelay, highIsOn));
   button.push_back(new Supla::Control::Button(pinButton, true));
   int size = relay.size() - 1;
-  button[size]->willTrigger(*relay[size], Supla::ON_PRESS, Supla::TOGGLE);
+  button[size]->willTrigger(*relay[size], ConfigManager->get(KEY_TYPE_BUTTON)->getValueElement(size), ConfigManager->get(KEY_TYPE_RELAY)->getValueElement(size));
 }
 
 void SuplaDevicePrimaryClass::addDS18B20MultiThermometer(int pinNumber) {
@@ -63,7 +68,7 @@ void  SuplaDevicePrimaryClass::addConfigESP(int pinNumberConfig, int pinLedConfi
   ConfigESP->addConfigESP(pinNumberConfig, pinLedConfig, modeConfigButton);
 }
 
-//std::vector <Supla::Control::Relay *> relay;
-//std::vector <Supla::Control::Button *> button;
+std::vector <Supla::Control::Relay *> relay;
+std::vector <Supla::Control::Button *> button;
 
 SuplaDevicePrimaryClass SuplaDevicePrimary;

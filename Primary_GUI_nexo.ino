@@ -19,7 +19,6 @@
 #include <supla/sensor/esp_free_heap.h>
 
 #include "SuplaDevicePrimary.h"
-#include "SuplaWebServer.h"
 
 void setup() {
   Serial.begin(74880);

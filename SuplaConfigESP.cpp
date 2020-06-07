@@ -26,8 +26,15 @@ SuplaConfigESP::SuplaConfigESP() {
     ConfigManager->setGUIDandAUTHKEY();
     ConfigManager->set(KEY_LOGIN, DEFAULT_LOGIN);
     ConfigManager->set(KEY_LOGIN_PASS, DEFAULT_LOGIN_PASS);
-    ConfigManager->save();
 
+    char BUTTON[MAX_TYPE_BUTTON];
+    char RELAY[MAX_TYPE_RELAY];
+    memset(BUTTON, Supla::ON_PRESS + '0', MAX_TYPE_BUTTON);
+    memset(RELAY, Supla::TOGGLE + '0', MAX_TYPE_RELAY);
+    ConfigManager->set(KEY_TYPE_BUTTON, BUTTON);
+    ConfigManager->set(KEY_TYPE_RELAY, RELAY);
+
+    ConfigManager->save();
     configModeInit();
   }
 
@@ -81,8 +88,23 @@ void SuplaConfigESP::trigger(int event, int action) {
         Serial.println("CONFIG_MODE_5SEK_HOLD");
         configModeInit();
       }
+      cnfigChangeTimeMs = 0;
     }
   }
+
+  if (configModeESP == CONFIG_MODE) {
+    if (event == Supla::ON_PRESS) {
+      rebootESP();
+    }
+  }
+}
+
+void SuplaConfigESP::rebootESP() {
+  delay(1000);
+  WiFi.forceSleepBegin();
+  wdt_reset();
+  ESP.restart();
+  while (1)wdt_reset();
 }
 
 void SuplaConfigESP::configModeInit() {

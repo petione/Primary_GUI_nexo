@@ -21,9 +21,9 @@
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
 #include "SuplaSensorDS18B20.h"
+#include "SuplaDevicePrimary.h"
 
 SuplaWebServer::SuplaWebServer() {
-  this->gui_box_shadow = "box-shadow:0 1px 30px rgba(0,0,0,.9)";
 }
 
 void SuplaWebServer::begin() {
@@ -42,7 +42,7 @@ void SuplaWebServer::iterateAlways() {
   } else {
     this->gui_color = GUI_GREEN;
   }
-  
+
   httpServer.handleClient();
 }
 
@@ -78,6 +78,22 @@ void SuplaWebServer::set() {
   ConfigManager->set(KEY_LOGIN_PASS, httpServer.arg("modul_pass").c_str());
   ConfigManager->set(KEY_SUPLA_SERVER, httpServer.arg("supla_server").c_str());
   ConfigManager->set(KEY_SUPLA_EMAIL, httpServer.arg("supla_email").c_str());
+
+  String button_value;
+  for (int i = 0; i < button.size(); ++i) {
+    String button = "button_set";
+    button += i;
+    button_value += httpServer.arg(button).c_str();
+  }
+  ConfigManager->set(KEY_TYPE_BUTTON, button_value.c_str());
+
+  String relay_value;
+  for (int i = 0; i < relay.size(); ++i) {
+    String relay = "relay_set";
+    relay += i;
+    relay_value += httpServer.arg(relay).c_str();
+  }
+  ConfigManager->set(KEY_TYPE_RELAY, relay_value.c_str());
 
   for (int i = 0; i < ConfigManager->get(KEY_MAX_DS18B20)->getValueInt(); i++) {
     String ds_key = KEY_DS;
@@ -243,8 +259,54 @@ String SuplaWebServer::supla_webpage_start(int save) {
   if (!sensorDS.empty()) {
     content += "<i><label>MAX DS18b20</label><input name='max_ds18b20' type='number' placeholder='1' step='1' min='1' max='20' value='" + String(ConfigManager->get(KEY_MAX_DS18B20)->getValue()) + "'></i>";
   }
-  content += "</div>";
 
+  //button
+  for (int i = 0; i < button.size(); i++) {
+    int select_button = ConfigManager->get(KEY_TYPE_BUTTON)->getValueElement(i);
+    content += "<i><label>Button action IN";
+    content += i + 1;
+    content += "</label><select name='button_set";
+    content += i;
+    content += "'>";
+
+    for (int suported_button = 0; suported_button < sizeof(Supported_Button) / sizeof(char*); suported_button++) {
+      content += "<option value='";
+      content += suported_button;
+      if (select_button == suported_button) {
+        content += "' selected>";
+      }
+      else content += "' >";
+      content += (Supported_Button[suported_button]);
+    }
+    content += "</select></i>";
+  }
+  //relay
+  for (int i = 0; i < relay.size(); ++i) {
+    content += "<i><label ";
+    content += ">Relay event IN";
+    content += i + 1;
+
+    //byte v = digitalRead(relay_button_channel[i].relay);
+    //if (relay_button_channel[i].invert == 1) v ^= 1;
+    //if (v == 1) content += " <font color='red' style='background-color:red'>##</font>";
+
+    content += "</label><select name='relay_set";
+    content += i;
+    content += "'>";
+    int select_relay = ConfigManager->get(KEY_TYPE_RELAY)->getValueElement(i);
+    for (int suported_relay = 0; suported_relay < sizeof(Supported_RelayFlag) / sizeof(char*); suported_relay++) {
+      content += "<option value='";
+      content += suported_relay;
+      if (select_relay == suported_relay) {
+        content += "' selected>";
+      }
+      else content += "' >";
+      content += (Supported_RelayFlag[suported_relay]);
+    }
+    content += "</select></i>";
+  }
+
+  content += "</div>";
   //*****************************************************************************************
 
   content += "<button type='submit'>Zapisz</button></form>";
@@ -416,11 +478,13 @@ String SuplaWebServer::showDS18B20() {
 }
 
 void SuplaWebServer::rebootESP() {
-  delay(1000);
-  WiFi.forceSleepBegin();
-  wdt_reset();
-  ESP.restart();
-  while (1)wdt_reset();
+  /* delay(1000);
+    WiFi.forceSleepBegin();
+    wdt_reset();
+    ESP.restart();
+    while (1)wdt_reset();*/
 }
+
+
 
 SuplaWebServer *WebServer;

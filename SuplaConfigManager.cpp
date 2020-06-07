@@ -63,6 +63,10 @@ const char *ConfigOption::getValueHex(size_t size) {
   return buffer;
 }
 
+int ConfigOption::getValueElement(int element) {
+  return _value[element] - 48;
+}
+
 int ConfigOption::getLength() {
   return _maxLength;
 }
@@ -97,6 +101,8 @@ SuplaConfigManager::SuplaConfigManager() {
   this->addKey(KEY_HOST_NAME, DEFAULT_HOSTNAME, MAX_HOSTNAME);
   this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
   this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
+  this->addKey(KEY_TYPE_BUTTON, MAX_TYPE_BUTTON);
+  this->addKey(KEY_TYPE_RELAY, MAX_TYPE_RELAY);
 
   this->addKeyAndRead(KEY_MAX_DS18B20, "1", sizeof(int));
   for (int i = 0; i < this->get(KEY_MAX_DS18B20)->getValueInt(); i++)
@@ -113,7 +119,7 @@ SuplaConfigManager::SuplaConfigManager() {
   switch (this->load()) {
     case E_CONFIG_OK:
       Serial.println("Config read");
-      this->showAllValue();
+      //this->showAllValue();
       return;
     case E_CONFIG_FS_ACCESS:
       Serial.println("E_CONFIG_FS_ACCESS: Couldn't access file system");
