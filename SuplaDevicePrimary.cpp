@@ -33,7 +33,7 @@ void SuplaDevicePrimaryClass::begin() {
   // wifi->setBufferSizes(1024, 256);
 
   wifi->enableSSL(false);
-  
+
   //String supla_hostname = ConfigManager->get(KEY_HOST_NAME)->getValue();
   //supla_hostname.replace(" ", "-");
   //wifi->setHostName(supla_hostname.c_str());
@@ -53,7 +53,14 @@ void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton, bool h
   relay.push_back(new Supla::Control::Relay(pinRelay, highIsOn));
   button.push_back(new Supla::Control::Button(pinButton, true));
   int size = relay.size() - 1;
-  button[size]->willTrigger(*relay[size], ConfigManager->get(KEY_TYPE_BUTTON)->getValueElement(size), ConfigManager->get(KEY_TYPE_RELAY)->getValueElement(size));
+
+  if (ConfigManager->get(KEY_TYPE_BUTTON)->getValueElement(size)) {
+    //BISTABILNY
+    button[size]->willTrigger(*relay[size], Supla::ON_CHANGE, Supla::TOGGLE);
+  } else {
+    //MONOSTABILNY
+    button[size]->willTrigger(*relay[size], ConfigManager->get(KEY_MONOSTABLE_TRIGGER)->getValueInt(), Supla::TOGGLE);
+  }
 }
 
 void SuplaDevicePrimaryClass::addDS18B20MultiThermometer(int pinNumber) {

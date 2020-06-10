@@ -34,7 +34,7 @@
 #define KEY_DS_NAME             "dsName"
 #define KEY_MAX_DS18B20         "ds18b20"
 #define KEY_TYPE_BUTTON         "typeButton"
-#define KEY_TYPE_RELAY          "typeRelay"
+#define KEY_MONOSTABLE_TRIGGER  "trigger"
 
 #define  MAX_GUID                 SUPLA_GUID_SIZE
 #define  MAX_AUTHKEY              SUPLA_GUID_SIZE
@@ -50,7 +50,7 @@
 #define  MAX_DS18B20_ADDRESS      8
 #define  MAX_DS18B20_NAME         8
 #define  MAX_TYPE_BUTTON          4
-#define  MAX_TYPE_RELAY           4
+#define  MAX_MONOSTABLE_TRIGGER   4
 
 #define E_CONFIG_OK               0
 #define E_CONFIG_FS_ACCESS        1
@@ -59,7 +59,7 @@
 #define E_CONFIG_PARSE_ERROR      4
 #define E_CONFIG_MAX              5
 
-#define CONFIG_MAX_OPTIONS        30
+#define CONFIG_MAX_OPTIONS        15
 
 #include <stdio.h>
 #include <stdint.h>

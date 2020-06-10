@@ -18,7 +18,6 @@
 #define SuplaDevicePrimary_h
 
 #include <supla/control/relay.h>
-#include <supla/control/bistable_relay.h>
 #include <supla/control/button.h>
 
 #include <vector>

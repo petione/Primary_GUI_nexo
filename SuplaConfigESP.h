@@ -17,9 +17,6 @@
 #ifndef SuplaConfigESP_h
 #define SuplaConfigESP_h
 
-#define CONFIG_WIFI_NAME  "SUPLA"
-#define CONFIG_WIFI_PASS  ""
-
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <SuplaDevice.h>
@@ -48,6 +45,7 @@ class SuplaConfigESP : public Supla::Triggerable {
     void ledBlinking(int time);
     void ledBlinkingStop(void);
     int getPinLedConfig();
+    String getMacAddress(bool formating);
 
     _configModeESP configModeESP;
     _supla_status supla_status;

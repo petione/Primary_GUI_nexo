@@ -23,8 +23,9 @@
 void setup() {
   Serial.begin(74880);
 
-  SuplaDevicePrimary.addRelayButton(5, 0);
-  SuplaDevicePrimary.addRelayButton(5, 14);
+  SuplaDevicePrimary.addRelayButton(14, 0);
+  SuplaDevicePrimary.addRelayButton(12, 0);
+  SuplaDevicePrimary.addRelayButton(13, 0);
   SuplaDevicePrimary.addDS18B20MultiThermometer(16);
   SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
 

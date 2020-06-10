@@ -41,17 +41,20 @@ class SuplaWebServer : public Supla::Element {
   private:
     void iterateAlways();
     void handle();
+    void saveWizard();
     void set();
     void search();
+    void firmware_up();
     void setSearch();
     void handleNotFound();
     void createWebServer();
+    
     String supla_webpage_start(int save);
     String supla_webpage_search(int save);
+    String supla_webpage_upddate();
     void supla_webpage_reboot();
 
     String getLogoSupla(void);
-    String getMacAddress();
 
     String showDS18B20();
 
@@ -62,18 +65,17 @@ class SuplaWebServer : public Supla::Element {
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
     char* update_path = UPDATE_PATH;
-    char* Supported_Button[3] = {
+
+    char* Supported_Button[2] = {
+      "MONOSTABLE",
+      "BISTABLE"
+    };
+
+    char* Supported_MonostableTrigger[2] = {
       "ON_PRESS",
-      "ON_RELEASE",
-      "ON_CHANGE"
+      "ON_RELEASE"
     };
-
-    char* Supported_RelayFlag[3] = {
-      "TURN_ON",
-      "TURN_OFF",
-      "TOGGLE"
-    };
-
+    
     String supla_webpage_save(void);
 
     ESP8266WebServer httpServer = {80};

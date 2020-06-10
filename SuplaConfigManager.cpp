@@ -16,6 +16,7 @@
 
 #include "SuplaConfigManager.h"
 
+
 #define CONFIG_FILE_PATH "/config.dat"
 
 ConfigOption::ConfigOption(const char *key, const char *value, int maxLength) {
@@ -102,7 +103,7 @@ SuplaConfigManager::SuplaConfigManager() {
   this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
   this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
   this->addKey(KEY_TYPE_BUTTON, MAX_TYPE_BUTTON);
-  this->addKey(KEY_TYPE_RELAY, MAX_TYPE_RELAY);
+  this->addKey(KEY_MONOSTABLE_TRIGGER, MAX_MONOSTABLE_TRIGGER);
 
   this->addKeyAndRead(KEY_MAX_DS18B20, "1", sizeof(int));
   for (int i = 0; i < this->get(KEY_MAX_DS18B20)->getValueInt(); i++)
