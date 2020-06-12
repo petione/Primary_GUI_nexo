@@ -46,7 +46,7 @@ class SuplaWebServer : public Supla::Element {
     void handleSearchDS();
     void handleDSSave();
     void handleFirmwareUp();
-    void handleNotFound();
+    
     void createWebServer();
 
     String supla_webpage_start(int save);
@@ -55,8 +55,6 @@ class SuplaWebServer : public Supla::Element {
     void supla_webpage_reboot();
 
     String getLogoSupla(void);
-
-    String showDS18B20();
 
     void rebootESP();
     char* gui_color;
@@ -75,8 +73,6 @@ class SuplaWebServer : public Supla::Element {
       "ON_PRESS",
       "ON_RELEASE"
     };
-
-    String supla_webpage_save(void);
 
     ESP8266WebServer httpServer = {80};
     ESP8266HTTPUpdateServer httpUpdater;

@@ -46,9 +46,6 @@ void SuplaWebServer::iterateAlways() {
   httpServer.handleClient();
 }
 
-void SuplaWebServer::handleNotFound() {
-}
-
 void SuplaWebServer::createWebServer() {
   httpServer.on("/", HTTP_GET, std::bind(&SuplaWebServer::handle, this));
   httpServer.on("/", HTTP_POST, std::bind(&SuplaWebServer::handleWizardSave, this));
