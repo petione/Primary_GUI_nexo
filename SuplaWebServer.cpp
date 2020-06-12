@@ -51,12 +51,12 @@ void SuplaWebServer::handleNotFound() {
 
 void SuplaWebServer::createWebServer() {
   httpServer.on("/", HTTP_GET, std::bind(&SuplaWebServer::handle, this));
-  httpServer.on("/", HTTP_POST, std::bind(&SuplaWebServer::saveWizard, this));
-  httpServer.on("/set", std::bind(&SuplaWebServer::set, this));
-  httpServer.on("/search", std::bind(&SuplaWebServer::search, this));
-  httpServer.on("/setSearch", std::bind(&SuplaWebServer::setSearch, this));
+  httpServer.on("/", HTTP_POST, std::bind(&SuplaWebServer::handleWizardSave, this));
+  httpServer.on("/set", std::bind(&SuplaWebServer::handleSave, this));
+  httpServer.on("/search", std::bind(&SuplaWebServer::handleSearchDS, this));
+  httpServer.on("/setSearch", std::bind(&SuplaWebServer::handleDSSave, this));
+  httpServer.on("/firmware_up", std::bind(&SuplaWebServer::handleFirmwareUp, this));
   httpServer.on("/rbt", std::bind(&SuplaWebServer::supla_webpage_reboot, this));
-  httpServer.on("/firmware_up", std::bind(&SuplaWebServer::firmware_up, this));
 }
 
 void SuplaWebServer::handle() {
@@ -68,8 +68,8 @@ void SuplaWebServer::handle() {
   httpServer.send(200, "text/html", supla_webpage_start(0));
 }
 
-void SuplaWebServer::saveWizard() {
-  Serial.println("HTTP_POST - metoda saveWizard");
+void SuplaWebServer::handleWizardSave() {
+  Serial.println("HTTP_POST - metoda handleWizardSave");
 
   if (strcmp(httpServer.arg("rbt").c_str(), "1") == 0) {
     Serial.println("RESTART ESP");
@@ -92,8 +92,8 @@ void SuplaWebServer::saveWizard() {
   }
 }
 
-void SuplaWebServer::set() {
-  Serial.println("HTTP_POST - metoda set");
+void SuplaWebServer::handleSave() {
+  Serial.println("HTTP_POST - metoda handleSave");
   if (ConfigESP->configModeESP == NORMAL_MODE) {
     if (!httpServer.authenticate(this->www_username, this->www_password))
       return httpServer.requestAuthentication();
@@ -109,7 +109,7 @@ void SuplaWebServer::set() {
   ConfigManager->set(KEY_MONOSTABLE_TRIGGER, httpServer.arg("trigger_set").c_str());
 
   String button_value;
-  for (int i = 0; i < button.size(); ++i) {
+  for (int i = 0; i < Supla::GUI::button.size(); ++i) {
     String button = "button_set";
     button += i;
     button_value += httpServer.arg(button).c_str();
@@ -119,7 +119,7 @@ void SuplaWebServer::set() {
   if (strcmp(httpServer.arg("max_ds18b20").c_str(), "") != 0) {
     ConfigManager->set(KEY_MAX_DS18B20, httpServer.arg("max_ds18b20").c_str());
   }
-  
+
   for (int i = 0; i < ConfigManager->get(KEY_MAX_DS18B20)->getValueInt(); i++) {
     String ds_key = KEY_DS;
     String ds_name_key = KEY_DS_NAME;
@@ -145,7 +145,7 @@ void SuplaWebServer::set() {
   }
 }
 
-void SuplaWebServer::search() {
+void SuplaWebServer::handleSearchDS() {
   if (ConfigESP->configModeESP == NORMAL_MODE) {
     if (!httpServer.authenticate(www_username, www_password))
       return httpServer.requestAuthentication();
@@ -153,15 +153,7 @@ void SuplaWebServer::search() {
   httpServer.send(200, "text/html", supla_webpage_search(0));
 }
 
-void SuplaWebServer::firmware_up() {
-  if (ConfigESP->configModeESP == NORMAL_MODE) {
-    if (!httpServer.authenticate(www_username, www_password))
-      return httpServer.requestAuthentication();
-  }
-  httpServer.send(200, "text/html", supla_webpage_upddate());
-}
-
-void SuplaWebServer::setSearch() {
+void SuplaWebServer::handleDSSave() {
   if (ConfigESP->configModeESP == NORMAL_MODE) {
     if (!httpServer.authenticate(www_username, www_password))
       return httpServer.requestAuthentication();
@@ -188,6 +180,14 @@ void SuplaWebServer::setSearch() {
       Serial.println("E_CONFIG_FILE_OPEN: Couldn't open file");
       httpServer.send(200, "text/html", supla_webpage_search(2));
   }
+}
+
+void SuplaWebServer::handleFirmwareUp() {
+  if (ConfigESP->configModeESP == NORMAL_MODE) {
+    if (!httpServer.authenticate(www_username, www_password))
+      return httpServer.requestAuthentication();
+  }
+  httpServer.send(200, "text/html", supla_webpage_upddate());
 }
 
 String SuplaWebServer::supla_webpage_start(int save) {
@@ -299,7 +299,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
     ds_key += i;
     ds_name_key += i;
 
-    double temp = sensorDS[i]->getValue();
+    double temp = Supla::GUI::sensorDS[i]->getValue();
     content += "<i><input name='ds18b20_name_id_";
     content += i;
     content += "' value='" + String(ConfigManager->get(ds_name_key.c_str())->getValue()) + "' maxlength=";
@@ -330,7 +330,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
   //}
 
   //button***************************************************************************************
-  for (int i = 0; i < button.size(); i++) {
+  for (int i = 0; i < Supla::GUI::button.size(); i++) {
     int select_button = ConfigManager->get(KEY_TYPE_BUTTON)->getValueElement(i);
     content += "<i><label>Button action IN";
     content += i + 1;
@@ -373,7 +373,7 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += "<br>";
   content += "<a href='/firmware_up'><button>Aktualizacja</button></a>";
   content += "<br><br>";
-  if (!sensorDS.empty()) {
+  if (!Supla::GUI::sensorDS.empty()) {
     content += "<a href='/search'><button>Szukaj DS</button></a>";
     content += "<br><br>";
   }
@@ -402,8 +402,8 @@ String SuplaWebServer::supla_webpage_search(int save) {
   content += "<center>";
   content += "<div class='w'>";
   content += "<h3>Temperatura</h3>";
-  for (int i = 0; i < sensorDS.size(); i++) {
-    double temp = sensorDS[i]->getValue();
+  for (int i = 0; i < Supla::GUI::sensorDS.size(); i++) {
+    double temp = Supla::GUI::sensorDS[i]->getValue();
     String ds_key = KEY_DS;
     ds_key += i;
 
@@ -425,7 +425,7 @@ String SuplaWebServer::supla_webpage_search(int save) {
 
   uint8_t address[8];
   uint8_t count = 0;
-  int pin = sensorDS[0]->getPin();
+  int pin = Supla::GUI::sensorDS[0]->getPin();
   OneWire ow(pin);
   String strAddress = "";
 

@@ -19,23 +19,29 @@
 
 #include <supla/control/relay.h>
 #include <supla/control/button.h>
+#include "SuplaSensorDS18B20.h"
 
 #include <vector>
 
 enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 
+namespace Supla {
+namespace GUI {
 class SuplaDevicePrimaryClass {
   public:
     SuplaDevicePrimaryClass();
-    ~SuplaDevicePrimaryClass();
-    void begin();
-    void addRelayButton(int pinRelay, int pinButton, bool highIsOn = true);
-    void addDS18B20MultiThermometer(int pinNumber);
-    void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 };
+
+void begin();
+void addRelayButton(int pinRelay, int pinButton, bool highIsOn = true);
+void addDS18B20MultiThermometer(int pinNumber);
+void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 
 extern std::vector <Supla::Control::Relay *> relay;
 extern std::vector <Supla::Control::Button *> button;
+extern std::vector <DS18B20 *> sensorDS;
 
 extern SuplaDevicePrimaryClass SuplaDevicePrimary;
+}
+}
 #endif //SuplaDevicePrimary_h

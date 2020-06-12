@@ -54,5 +54,4 @@ class DS18B20: public Supla::Sensor::Thermometer {
     double lastValidValue;
 };
 
-extern std::vector <DS18B20 *> sensorDS;
 #endif //SuplaSensorDS18B20_h

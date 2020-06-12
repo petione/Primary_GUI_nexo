@@ -162,4 +162,3 @@ uint8_t  DS18B20::getPin() {
 }
 
 OneWireBus *DS18B20::oneWireBus = nullptr;
-std::vector <DS18B20 *> sensorDS;

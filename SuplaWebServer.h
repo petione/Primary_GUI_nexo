@@ -41,14 +41,14 @@ class SuplaWebServer : public Supla::Element {
   private:
     void iterateAlways();
     void handle();
-    void saveWizard();
-    void set();
-    void search();
-    void firmware_up();
-    void setSearch();
+    void handleWizardSave();
+    void handleSave();
+    void handleSearchDS();
+    void handleDSSave();
+    void handleFirmwareUp();
     void handleNotFound();
     void createWebServer();
-    
+
     String supla_webpage_start(int save);
     String supla_webpage_search(int save);
     String supla_webpage_upddate();
@@ -75,7 +75,7 @@ class SuplaWebServer : public Supla::Element {
       "ON_PRESS",
       "ON_RELEASE"
     };
-    
+
     String supla_webpage_save(void);
 
     ESP8266WebServer httpServer = {80};

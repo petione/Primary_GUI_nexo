@@ -23,15 +23,15 @@
 void setup() {
   Serial.begin(74880);
 
-  SuplaDevicePrimary.addRelayButton(14, 0);
-  SuplaDevicePrimary.addRelayButton(12, 0);
-  SuplaDevicePrimary.addRelayButton(13, 0);
-  SuplaDevicePrimary.addDS18B20MultiThermometer(16);
-  SuplaDevicePrimary.addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
+  Supla::GUI::addRelayButton(14, 0);
+  Supla::GUI::addRelayButton(12, 0);
+  Supla::GUI::addRelayButton(13, 0);
+  Supla::GUI::addDS18B20MultiThermometer(16);
+  Supla::GUI::addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
 
   new Supla::Sensor::EspFreeHeap();
 
-  SuplaDevicePrimary.begin();
+  Supla::GUI::begin();
 }
 
 void loop() {

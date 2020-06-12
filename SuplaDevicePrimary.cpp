@@ -16,25 +16,19 @@
 #include <supla/network/esp_wifi.h>
 
 #include "SuplaDevicePrimary.h"
-#include "SuplaSensorDS18B20.h"
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
 #include "SuplaWebServer.h"
 
+namespace Supla {
+namespace GUI {
 SuplaDevicePrimaryClass::SuplaDevicePrimaryClass() {
   ConfigManager = new SuplaConfigManager();
   ConfigESP = new SuplaConfigESP();
   WebServer = new SuplaWebServer();
 }
 
-SuplaDevicePrimaryClass::~SuplaDevicePrimaryClass() {
-  delete ConfigManager;
-  delete ConfigESP;
-  delete WebServer;
-  delete this;
-}
-
-void SuplaDevicePrimaryClass::begin() {
+void begin() {
   Supla::ESPWifi *wifi = new Supla::ESPWifi(ConfigManager->get(KEY_WIFI_SSID)->getValue(),
       ConfigManager->get(KEY_WIFI_PASS)->getValue());
   // wifi->setBufferSizes(1024, 256);
@@ -56,7 +50,7 @@ void SuplaDevicePrimaryClass::begin() {
   WebServer->begin();
 }
 
-void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton, bool highIsOn) {
+void addRelayButton(int pinRelay, int pinButton, bool highIsOn) {
   relay.push_back(new Supla::Control::Relay(pinRelay, highIsOn));
   button.push_back(new Supla::Control::Button(pinButton, true));
   int size = relay.size() - 1;
@@ -70,7 +64,7 @@ void SuplaDevicePrimaryClass::addRelayButton(int pinRelay, int pinButton, bool h
   }
 }
 
-void SuplaDevicePrimaryClass::addDS18B20MultiThermometer(int pinNumber) {
+void addDS18B20MultiThermometer(int pinNumber) {
   for (int i = 0; i < ConfigManager->get(KEY_MAX_DS18B20)->getValueInt(); ++i) {
     String ds_key = KEY_DS;
     ds_key += i;
@@ -78,11 +72,14 @@ void SuplaDevicePrimaryClass::addDS18B20MultiThermometer(int pinNumber) {
   }
 }
 
-void  SuplaDevicePrimaryClass::addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton) {
+void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton) {
   ConfigESP->addConfigESP(pinNumberConfig, pinLedConfig, modeConfigButton);
 }
 
 std::vector <Supla::Control::Relay *> relay;
 std::vector <Supla::Control::Button *> button;
+std::vector <DS18B20 *> sensorDS;
 
 SuplaDevicePrimaryClass SuplaDevicePrimary;
+}
+}
