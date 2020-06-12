@@ -41,7 +41,6 @@ extern std::vector <Supla::Control::Relay *> relay;
 extern std::vector <Supla::Control::Button *> button;
 extern std::vector <DS18B20 *> sensorDS;
 
-extern SuplaDevicePrimaryClass SuplaDevicePrimary;
 }
 }
 #endif //SuplaDevicePrimary_h
