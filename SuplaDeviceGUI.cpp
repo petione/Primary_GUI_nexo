@@ -15,14 +15,14 @@
 */
 #include <supla/network/esp_wifi.h>
 
-#include "SuplaDevicePrimary.h"
+#include "SuplaDeviceGUI.h"
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
 #include "SuplaWebServer.h"
 
 namespace Supla {
 namespace GUI {
-SuplaDevicePrimaryClass::SuplaDevicePrimaryClass() {
+SuplaDeviceGUIClass::SuplaDeviceGUIClass() {
   ConfigManager = new SuplaConfigManager();
   ConfigESP = new SuplaConfigESP();
   WebServer = new SuplaWebServer();
@@ -80,6 +80,6 @@ std::vector <Supla::Control::Relay *> relay;
 std::vector <Supla::Control::Button *> button;
 std::vector <DS18B20 *> sensorDS;
 
-SuplaDevicePrimaryClass SuplaDevicePrimary;
+SuplaDeviceGUIClass SuplaDevicePrimary;
 }
 }

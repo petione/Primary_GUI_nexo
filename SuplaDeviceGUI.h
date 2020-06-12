@@ -14,8 +14,8 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#ifndef SuplaDevicePrimary_h
-#define SuplaDevicePrimary_h
+#ifndef SuplaDeviceGUI_h
+#define SuplaDeviceGUI_h
 
 #include <supla/control/relay.h>
 #include <supla/control/button.h>
@@ -43,4 +43,4 @@ extern std::vector <DS18B20 *> sensorDS;
 
 }
 }
-#endif //SuplaDevicePrimary_h
+#endif //SuplaDeviceGUI_h
