@@ -296,6 +296,7 @@ void status_func(int status, const char *msg) {
   if (ConfigESP->supla_status.old_msg != ConfigESP->supla_status.msg) {
     ConfigESP->supla_status.old_msg = ConfigESP->supla_status.msg;
     ConfigESP->supla_status.status = status;
+    Serial.println(ConfigESP->supla_status.msg);
   }
 }
 
