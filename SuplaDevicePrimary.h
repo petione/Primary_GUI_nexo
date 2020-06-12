@@ -27,6 +27,7 @@ enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 class SuplaDevicePrimaryClass {
   public:
     SuplaDevicePrimaryClass();
+    ~SuplaDevicePrimaryClass();
     void begin();
     void addRelayButton(int pinRelay, int pinButton, bool highIsOn = true);
     void addDS18B20MultiThermometer(int pinNumber);

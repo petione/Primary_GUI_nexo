@@ -50,7 +50,7 @@
 #define  MAX_DS18B20_ADDRESS      8
 #define  MAX_DS18B20_NAME         8
 #define  MAX_TYPE_BUTTON          4
-#define  MAX_MONOSTABLE_TRIGGER   4
+#define  MAX_MONOSTABLE_TRIGGER   1
 
 #define E_CONFIG_OK               0
 #define E_CONFIG_FS_ACCESS        1
@@ -59,7 +59,7 @@
 #define E_CONFIG_PARSE_ERROR      4
 #define E_CONFIG_MAX              5
 
-#define CONFIG_MAX_OPTIONS        15
+#define CONFIG_MAX_OPTIONS        88
 
 #include <stdio.h>
 #include <stdint.h>
