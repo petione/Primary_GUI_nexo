@@ -23,9 +23,8 @@
 void setup() {
   Serial.begin(74880);
 
-  Supla::GUI::addRelayButton(14, 0);
-  Supla::GUI::addRelayButton(12, 0);
   Supla::GUI::addRelayButton(13, 0);
+  Supla::GUI::addRelayButton(12, 0, false);
   Supla::GUI::addDS18B20MultiThermometer(16);
   Supla::GUI::addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
 

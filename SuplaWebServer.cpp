@@ -21,7 +21,7 @@
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
 #include "SuplaSensorDS18B20.h"
-#include "SuplaDevicePrimary.h"
+#include "SuplaDeviceGUI.h"
 
 SuplaWebServer::SuplaWebServer() {
 }

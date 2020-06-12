@@ -16,7 +16,7 @@
 
 #include "SuplaConfigESP.h"
 #include "SuplaConfigManager.h"
-#include "SuplaDevicePrimary.h"
+#include "SuplaDeviceGUI.h"
 #include "SuplaWebServer.h"
 
 SuplaConfigESP::SuplaConfigESP() {

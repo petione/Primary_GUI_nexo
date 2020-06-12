@@ -27,9 +27,9 @@ enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 
 namespace Supla {
 namespace GUI {
-class SuplaDevicePrimaryClass {
+class SuplaDeviceGUIClass {
   public:
-    SuplaDevicePrimaryClass();
+    SuplaDeviceGUIClass();
 };
 
 void begin();

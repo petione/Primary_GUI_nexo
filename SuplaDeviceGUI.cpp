@@ -80,6 +80,6 @@ std::vector <Supla::Control::Relay *> relay;
 std::vector <Supla::Control::Button *> button;
 std::vector <DS18B20 *> sensorDS;
 
-SuplaDeviceGUIClass SuplaDevicePrimary;
+SuplaDeviceGUIClass SuplaDeviceGUI;
 }
 }
