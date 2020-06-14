@@ -126,20 +126,19 @@ SuplaConfigManager::SuplaConfigManager() {
 
   switch (this->load()) {
     case E_CONFIG_OK:
-      Serial.println("Config read");
-      //this->showAllValue();
+      Serial.println(F("Config read"));
       return;
     case E_CONFIG_FS_ACCESS:
-      Serial.println("E_CONFIG_FS_ACCESS: Couldn't access file system");
+      Serial.println(F("E_CONFIG_FS_ACCESS: Couldn't access file system"));
       return;
     case E_CONFIG_FILE_NOT_FOUND:
-      Serial.println("E_CONFIG_FILE_NOT_FOUND: File not found");
+      Serial.println(F("E_CONFIG_FILE_NOT_FOUND: File not found"));
       return;
     case E_CONFIG_FILE_OPEN:
-      Serial.println("E_CONFIG_FILE_OPEN: Couldn't open file");
+      Serial.println(F("E_CONFIG_FILE_OPEN: Couldn't open file"));
       return;
     case E_CONFIG_PARSE_ERROR:
-      Serial.println("E_CONFIG_PARSE_ERROR: File was not parsable");
+      Serial.println(F("E_CONFIG_PARSE_ERROR: File was not parsable"));
       return;
   }
 }
