@@ -44,7 +44,7 @@ class SuplaWebServer : public Supla::Element {
     void handleSearchDS();
     void handleDSSave();
     void handleFirmwareUp();
-    
+
     void createWebServer();
 
     String supla_webpage_start(int save);
@@ -52,25 +52,30 @@ class SuplaWebServer : public Supla::Element {
     String supla_webpage_upddate();
     void supla_webpage_reboot();
 
-    String getLogoSupla(void);
+    String SuplaMetas();
+    String SuplaStyle();
+    String SuplaFavicon();
+    String SuplaLogo();
+    String SuplaJavaScript();
+    String SuplaCopyrightBar();
 
     void rebootESP();
-    char* gui_color;
-    char* gui_box_shadow = "box-shadow:0 1px 30px rgba(0,0,0,.9)";
-
-    char www_username[MAX_MLOGIN];
-    char www_password[MAX_MPASSWORD];
-    char* update_path = UPDATE_PATH;
-
-    char* Supported_Button[2] = {
+    
+    const char* Supported_Button[2] = {
       "MONOSTABLE",
       "BISTABLE"
     };
 
-    char* Supported_MonostableTrigger[2] = {
+    const char* Supported_MonostableTrigger[2] = {
       "ON_PRESS",
       "ON_RELEASE"
     };
+
+    char* gui_color;
+
+    char www_username[MAX_MLOGIN];
+    char www_password[MAX_MPASSWORD];
+    char* update_path = UPDATE_PATH;
 
     ESP8266WebServer httpServer = {80};
     ESP8266HTTPUpdateServer httpUpdater;
