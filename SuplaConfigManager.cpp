@@ -328,13 +328,10 @@ bool SuplaConfigManager::set(const char *key, const char *value) {
 }
 
 void SuplaConfigManager::setGUIDandAUTHKEY() {
-
   if (strcmp(this->get(KEY_SUPLA_GUID)->getValue(), "") != 0 ||
       strcmp(this->get(KEY_SUPLA_AUTHKEY)->getValue(), "") != 0) {
     return;
   }
-
-  Serial.println("wygenerowanao GUID I AUTHKEY");
 
   char mac[6];
   int a;
