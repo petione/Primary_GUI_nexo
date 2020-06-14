@@ -111,6 +111,4 @@ class SuplaConfigManager {
     int _optionCount;
     ConfigOption *_options[CONFIG_MAX_OPTIONS];
 };
-
-extern SuplaConfigManager *ConfigManager;
 #endif

@@ -22,8 +22,6 @@
 #include <SuplaDevice.h>
 #include <supla/control/button.h>
 
-#include "SuplaConfigManager.h"
-
 enum _configModeESP { NORMAL_MODE, CONFIG_MODE };
 
 typedef struct {
@@ -65,5 +63,4 @@ class SuplaConfigESP : public Supla::Triggerable {
 void ledBlinking_func(void *timer_arg);
 void status_func(int status, const char *msg);
 
-extern SuplaConfigESP *ConfigESP;
 #endif //SuplaConfigESP_h

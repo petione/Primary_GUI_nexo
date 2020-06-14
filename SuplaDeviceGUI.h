@@ -21,16 +21,16 @@
 #include <supla/control/button.h>
 #include "SuplaSensorDS18B20.h"
 
+#include "SuplaConfigManager.h"
+#include "SuplaConfigESP.h"
+#include "SuplaWebServer.h"
+
 #include <vector>
 
 enum ConfigMode { CONFIG_MODE_10_ON_PRESSES, CONFIG_MODE_5SEK_HOLD };
 
 namespace Supla {
 namespace GUI {
-class SuplaDeviceGUIClass {
-  public:
-    SuplaDeviceGUIClass();
-};
 
 void begin();
 void addRelayButton(int pinRelay, int pinButton, bool highIsOn = true);
@@ -40,7 +40,11 @@ void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 extern std::vector <Supla::Control::Relay *> relay;
 extern std::vector <Supla::Control::Button *> button;
 extern std::vector <DS18B20 *> sensorDS;
+}
+}
 
-}
-}
+extern SuplaConfigManager *ConfigManager;
+extern SuplaConfigESP *ConfigESP;
+extern SuplaWebServer *WebServer;
+
 #endif //SuplaDeviceGUI_h

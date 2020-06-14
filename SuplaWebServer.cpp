@@ -18,9 +18,6 @@
 #include <OneWire.h>
 
 #include "SuplaWebServer.h"
-#include "SuplaConfigESP.h"
-#include "SuplaConfigManager.h"
-#include "SuplaSensorDS18B20.h"
 #include "SuplaDeviceGUI.h"
 
 SuplaWebServer::SuplaWebServer() {
@@ -509,5 +506,3 @@ void SuplaWebServer::rebootESP() {
   ESP.restart();
   while (1)wdt_reset();
 }
-
-SuplaWebServer *WebServer;

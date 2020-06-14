@@ -16,7 +16,6 @@
 
 #include "SuplaConfigManager.h"
 
-
 #define CONFIG_FILE_PATH "/config.dat"
 
 ConfigOption::ConfigOption(const char *key, const char *value, int maxLength) {
@@ -369,5 +368,3 @@ void SuplaConfigManager::setGUIDandAUTHKEY() {
   this->set(KEY_SUPLA_AUTHKEY, AUTHKEY);
 
 }
-
-SuplaConfigManager *ConfigManager;

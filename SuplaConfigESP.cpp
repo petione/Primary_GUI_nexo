@@ -15,9 +15,8 @@
 */
 
 #include "SuplaConfigESP.h"
-#include "SuplaConfigManager.h"
+
 #include "SuplaDeviceGUI.h"
-#include "SuplaWebServer.h"
 
 SuplaConfigESP::SuplaConfigESP() {
   configModeESP = NORMAL_MODE;
@@ -299,5 +298,3 @@ void status_func(int status, const char *msg) {
     Serial.println(ConfigESP->supla_status.msg);
   }
 }
-
-SuplaConfigESP *ConfigESP;

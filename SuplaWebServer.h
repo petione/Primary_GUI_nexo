@@ -78,5 +78,4 @@ class SuplaWebServer : public Supla::Element {
     ESP8266HTTPUpdateServer httpUpdater;
 };
 
-extern SuplaWebServer *WebServer;
 #endif //SuplaWebServer_h

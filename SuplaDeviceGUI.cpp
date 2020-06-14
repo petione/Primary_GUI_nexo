@@ -16,18 +16,9 @@
 #include <supla/network/esp_wifi.h>
 
 #include "SuplaDeviceGUI.h"
-#include "SuplaConfigESP.h"
-#include "SuplaConfigManager.h"
-#include "SuplaWebServer.h"
 
 namespace Supla {
 namespace GUI {
-SuplaDeviceGUIClass::SuplaDeviceGUIClass() {
-  ConfigManager = new SuplaConfigManager();
-  ConfigESP = new SuplaConfigESP();
-  WebServer = new SuplaWebServer();
-}
-
 void begin() {
   Supla::ESPWifi *wifi = new Supla::ESPWifi(ConfigManager->get(KEY_WIFI_SSID)->getValue(),
       ConfigManager->get(KEY_WIFI_PASS)->getValue());
@@ -79,7 +70,9 @@ void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton) {
 std::vector <Supla::Control::Relay *> relay;
 std::vector <Supla::Control::Button *> button;
 std::vector <DS18B20 *> sensorDS;
+}
+}
 
-SuplaDeviceGUIClass SuplaDeviceGUI;
-}
-}
+SuplaConfigManager *ConfigManager = new SuplaConfigManager();
+SuplaConfigESP *ConfigESP = new SuplaConfigESP();
+SuplaWebServer *WebServer = new SuplaWebServer();
