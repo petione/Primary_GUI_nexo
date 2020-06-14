@@ -17,10 +17,7 @@
 #ifndef SuplaConfigESP_h
 #define SuplaConfigESP_h
 
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <SuplaDevice.h>
-#include <supla/control/button.h>
+#include <supla/triggerable.h>
 
 enum _configModeESP { NORMAL_MODE, CONFIG_MODE };
 

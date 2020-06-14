@@ -19,11 +19,9 @@
 
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
-#include <SuplaDevice.h>
 
-#include "SuplaConfigESP.h"
+#include <supla/element.h>
 #include "SuplaConfigManager.h"
-#include <supla/channel.h>
 
 #define  GUI_BLUE               "#005c96"
 #define  GUI_GREEN              "#00D151"

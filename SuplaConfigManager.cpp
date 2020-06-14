@@ -14,7 +14,15 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+
+#include <supla-common/proto.h>
+#include <IPAddress.h>
+
 #include "SuplaConfigManager.h"
+#include "FS.h"
 
 #define CONFIG_FILE_PATH "/config.dat"
 

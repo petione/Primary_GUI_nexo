@@ -17,6 +17,8 @@
 #ifndef SuplaDeviceGUI_h
 #define SuplaDeviceGUI_h
 
+#include <SuplaDevice.h>
+
 #include <supla/control/relay.h>
 #include <supla/control/button.h>
 #include "SuplaSensorDS18B20.h"

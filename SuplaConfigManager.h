@@ -61,13 +61,6 @@
 
 #define CONFIG_MAX_OPTIONS        88
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-
-#include <SuplaDevice.h>
-#include "FS.h"
-
 class ConfigOption {
   public:
     ConfigOption(const char *key, const char *value, int maxLength);
