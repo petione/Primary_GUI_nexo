@@ -40,7 +40,7 @@ OneWireBus::OneWireBus(uint8_t pinNumberConfig)
     if (!sensors.getAddress(address, i)) {
       supla_log(LOG_DEBUG, "Unable to find address for Device %d", i);
     } else {
-      sprintf(
+      /*sprintf(
         strAddr,
         "{0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X, 0x%02X}",
         address[0],
@@ -51,7 +51,7 @@ OneWireBus::OneWireBus(uint8_t pinNumberConfig)
         address[5],
         address[6],
         address[7]);
-      supla_log(LOG_DEBUG, "Index %d - address %s", i, strAddr);
+      supla_log(LOG_DEBUG, "Index %d - address %s", i, strAddr);*/
       sensors.setResolution(address, 12);
     }
     delay(0);

@@ -373,12 +373,20 @@ String SuplaWebServer::supla_webpage_start(int save) {
 
 String SuplaWebServer::supla_webpage_search(int save) {
   String content = "";
+  uint8_t count = 0;
+  int pin = Supla::GUI::sensorDS[0]->getPin();
+
+  OneWire ow(pin);
+  DallasTemperature sensors;
+  DeviceAddress address;
+  char strAddr[64];
 
   content += SuplaMetas();
   content += SuplaStyle();
 
   if (save == 1) {
     content += F("<div id=\"msg\" class=\"c\">Dane zapisane - restart modułu</div>");
+    content += F("<script type='text/javascript'>setTimeout(function(){location.href='/search'} , 3000);</script>");
   } else if (save == 2) {
     content += F("<div id=\"msg\" class=\"c\">Błąd zapisu</div>");
   }
@@ -404,39 +412,51 @@ String SuplaWebServer::supla_webpage_search(int save) {
     content += F(" <b>&deg;C</b> ");
     content += F("</label>");
     content += F("<label style='left:80px'>GPIO: ");
-    content += 2;
+    content += pin;
     content += F("</label></i>");
   }
   content += F("</div>");
-
-  uint8_t address[8];
-  uint8_t count = 0;
-  int pin = Supla::GUI::sensorDS[0]->getPin();
-  OneWire ow(pin);
-  String strAddress = "";
 
   content += F("<form method='post' action='setSearch'>");
   content += F("<div class='w'>");
   content += F("<h3>Znalezione DS18b20</h3>");
 
-  if (ow.search(address))
-  {
-    do {
+  sensors.setOneWire(&ow);
+  sensors.begin();
+  if (sensors.isParasitePowerMode()) {
+    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is ON", pin);
+  } else {
+    supla_log(LOG_DEBUG, "OneWire(pin %d) Parasite power is OFF", pin);
+  }
+
+  // report parasite power requirements
+  for (int i = 0; i < sensors.getDeviceCount(); i++) {
+    if (!sensors.getAddress(address, i)) {
+      supla_log(LOG_DEBUG, "Unable to find address for Device %d", i);
+    } else {
+      sprintf(
+        strAddr,
+        "%02X%02X%02X%02X%02X%02X%02X%02X",
+        address[0],
+        address[1],
+        address[2],
+        address[3],
+        address[4],
+        address[5],
+        address[6],
+        address[7]);
+      supla_log(LOG_DEBUG, "Index %d - address %s", i, strAddr);
+
       content += F("<i><input name='ds18b20_channel_id_");
       content += count;
 
-      for (uint8_t i = 0; i < 8; i++) {
-        if (address[i] < 16) strAddress += String(0, HEX);
-        strAddress += String(address[i], HEX);
-      }
-
-      content += "' value='" + strAddress + "' maxlength=";
+      content += "' value='" + String(strAddr) + "' maxlength=";
       content += MAX_DS18B20_ADDRESS_HEX;
       content += F(" readonly><label></i>");
 
-      strAddress = "";
       count++;
-    } while (ow.search(address));
+    }
+    delay(0);
   }
 
   if (count == 0)
@@ -518,7 +538,7 @@ String SuplaWebServer::SuplaCopyrightBar() {
 }
 
 void SuplaWebServer::rebootESP() {
-  delay(1000);
+  delay(3000);
   WiFi.forceSleepBegin();
   wdt_reset();
   ESP.restart();

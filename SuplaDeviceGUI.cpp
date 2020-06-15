@@ -60,6 +60,7 @@ void addDS18B20MultiThermometer(int pinNumber) {
     String ds_key = KEY_DS;
     ds_key += i;
     sensorDS.push_back(new DS18B20(pinNumber, ConfigManager->get(ds_key.c_str())->getValueBin(MAX_DS18B20_ADDRESS)));
+    supla_log(LOG_DEBUG, "Index %d - address %s", i, ConfigManager->get(ds_key.c_str())->getValue());
   }
 }
 
