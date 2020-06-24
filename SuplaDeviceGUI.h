@@ -17,6 +17,8 @@
 #ifndef SuplaDeviceGUI_h
 #define SuplaDeviceGUI_h
 
+#define DEBUG_MODE
+
 #include <SuplaDevice.h>
 
 #include <supla/control/relay.h>
