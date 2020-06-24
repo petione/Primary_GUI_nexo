@@ -20,8 +20,10 @@
 namespace Supla {
 namespace GUI {
 void begin() {
-  Supla::ESPWifi *wifi = new Supla::ESPWifi(ConfigManager->get(KEY_WIFI_SSID)->getValue(),
-      ConfigManager->get(KEY_WIFI_PASS)->getValue());
+  Supla::ESPWifi *wifi = new Supla::ESPWifi(
+    ConfigManager->get(KEY_WIFI_SSID)->getValue(),
+    ConfigManager->get(KEY_WIFI_PASS)->getValue());
+
   // wifi->setBufferSizes(1024, 256);
 
   wifi->enableSSL(false);

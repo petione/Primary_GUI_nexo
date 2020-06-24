@@ -28,7 +28,7 @@ void setup() {
   Supla::GUI::addDS18B20MultiThermometer(13);
   Supla::GUI::addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
 
-  new Supla::Sensor::EspFreeHeap();
+  //new Supla::Sensor::EspFreeHeap();
 
   Supla::GUI::begin();
 }
