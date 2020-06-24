@@ -52,15 +52,18 @@ class SuplaWebServer : public Supla::Element {
     String supla_webpage_upddate();
     void supla_webpage_reboot();
 
-    String SuplaMetas();
-    String SuplaStyle();
-    String SuplaFavicon();
-    String SuplaLogo();
-    String SuplaJavaScript();
-    String SuplaCopyrightBar();
+    const String SuplaMetas();
+    const String SuplaStyle();
+    const String SuplaFavicon();
+    const String SuplaLogo();
+    const String SuplaSummary();
+    const String SuplaJavaScript();
+    const String SuplaCopyrightBar();
 
     void rebootESP();
-    
+
+    void sendContent(const String content);
+
     const char* Supported_Button[2] = {
       "MONOSTABLE",
       "BISTABLE"
@@ -75,7 +78,7 @@ class SuplaWebServer : public Supla::Element {
 
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
-    char* update_path = UPDATE_PATH;
+    char* update_path = (char*)UPDATE_PATH;
 
     ESP8266WebServer httpServer = {80};
     ESP8266HTTPUpdateServer httpUpdater;

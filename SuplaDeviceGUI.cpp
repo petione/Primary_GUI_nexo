@@ -24,7 +24,7 @@ void begin() {
       ConfigManager->get(KEY_WIFI_PASS)->getValue());
   // wifi->setBufferSizes(1024, 256);
 
-  //wifi->enableSSL(false);
+  wifi->enableSSL(false);
 
   //String supla_hostname = ConfigManager->get(KEY_HOST_NAME)->getValue();
   //supla_hostname.replace(" ", "-");

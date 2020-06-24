@@ -107,8 +107,8 @@ SuplaConfigManager::SuplaConfigManager() {
   this->addKey(KEY_LOGIN, MAX_MLOGIN);
   this->addKey(KEY_LOGIN_PASS, MAX_MPASSWORD);
   this->addKey(KEY_HOST_NAME, DEFAULT_HOSTNAME, MAX_HOSTNAME);
-  this->addKey(KEY_SUPLA_SERVER, MAX_SUPLA_SERVER);
-  this->addKey(KEY_SUPLA_EMAIL, MAX_EMAIL);
+  this->addKey(KEY_SUPLA_SERVER, "svrX.supla.org", MAX_SUPLA_SERVER);
+  this->addKey(KEY_SUPLA_EMAIL, "email@address",MAX_EMAIL);
   this->addKey(KEY_TYPE_BUTTON, MAX_TYPE_BUTTON);
   this->addKey(KEY_MONOSTABLE_TRIGGER, MAX_MONOSTABLE_TRIGGER);
 
