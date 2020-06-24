@@ -14,21 +14,23 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
-#include <SPI.h>
-#include <SuplaDevice.h>
-#include <supla/sensor/esp_free_heap.h>
+//#define DEBUG_MODE
 
 #include "SuplaDeviceGUI.h"
+
+#include <SPI.h>
+#include <SuplaDevice.h>
+#include <supla/sensor/binary.h>
 
 void setup() {
   Serial.begin(74880);
 
+  new Supla::Sensor::Binary(16);
+  
   Supla::GUI::addRelayButton(14, 0);
   Supla::GUI::addRelayButton(12, 0, false);
   Supla::GUI::addDS18B20MultiThermometer(13);
   Supla::GUI::addConfigESP(0, 2, CONFIG_MODE_5SEK_HOLD); // pinNumberConfig, pinLedConfig, CONFIG_MODE_10_ON_PRESSES/CONFIG_MODE_5SEK_HOLD
-
-  //new Supla::Sensor::EspFreeHeap();
 
   Supla::GUI::begin();
 }

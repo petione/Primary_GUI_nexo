@@ -13,24 +13,28 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
-#include <supla/network/esp_wifi.h>
+#include "esp_wifi.h"
 
 #include "SuplaDeviceGUI.h"
 
 namespace Supla {
 namespace GUI {
 void begin() {
+
+#ifdef DEBUG_MODE
+  new Supla::Sensor::EspFreeHeap();
+#endif
+
   Supla::ESPWifi *wifi = new Supla::ESPWifi(
     ConfigManager->get(KEY_WIFI_SSID)->getValue(),
     ConfigManager->get(KEY_WIFI_PASS)->getValue());
 
-  // wifi->setBufferSizes(1024, 256);
+  wifi->enableBuffer(true);
+  wifi->enableSSL(true);
 
-  wifi->enableSSL(false);
-
-  //String supla_hostname = ConfigManager->get(KEY_HOST_NAME)->getValue();
-  //supla_hostname.replace(" ", "-");
-  //wifi->setHostName(supla_hostname.c_str());
+  String supla_hostname = ConfigManager->get(KEY_HOST_NAME)->getValue();
+  supla_hostname.replace(" ", "-");
+  wifi->setHostName(supla_hostname.c_str());
 
   SuplaDevice.setName((char*)ConfigManager->get(KEY_HOST_NAME)->getValue());
 

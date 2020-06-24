@@ -23,6 +23,10 @@
 #include <supla/control/button.h>
 #include "SuplaSensorDS18B20.h"
 
+#ifdef DEBUG_MODE
+#include <supla/sensor/esp_free_heap.h>
+#endif
+
 #include "SuplaConfigManager.h"
 #include "SuplaConfigESP.h"
 #include "SuplaWebServer.h"
@@ -42,8 +46,8 @@ void addConfigESP(int pinNumberConfig, int pinLedConfig, int modeConfigButton);
 extern std::vector <Supla::Control::Relay *> relay;
 extern std::vector <Supla::Control::Button *> button;
 extern std::vector <DS18B20 *> sensorDS;
-}
-}
+};
+};
 
 extern SuplaConfigManager *ConfigManager;
 extern SuplaConfigESP *ConfigESP;

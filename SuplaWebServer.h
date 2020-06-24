@@ -70,8 +70,8 @@ class SuplaWebServer : public Supla::Element {
     };
 
     const char* Supported_MonostableTrigger[2] = {
-      "ON_PRESS",
-      "ON_RELEASE"
+      "ON_RELEASE",
+      "ON_PRESS"
     };
 
     char* gui_color;

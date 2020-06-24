@@ -125,7 +125,6 @@ void SuplaWebServer::handleSave() {
     case E_CONFIG_OK:
       Serial.println(F("E_CONFIG_OK: Dane zapisane"));
       this->sendContent(supla_webpage_start(5));
-
       rebootESP();
     case E_CONFIG_FILE_OPEN:
       Serial.println(F("E_CONFIG_FILE_OPEN: Couldn't open file"));
