@@ -59,7 +59,7 @@ void SuplaWebServer::handleWizardSave() {
 
   if (strcmp(httpServer.arg("rbt").c_str(), "1") == 0) {
     Serial.println(F("RESTART ESP"));
-    rebootESP();
+    this->rebootESP();
     return;
   }
 
@@ -124,8 +124,10 @@ void SuplaWebServer::handleSave() {
   switch (ConfigManager->save()) {
     case E_CONFIG_OK:
       Serial.println(F("E_CONFIG_OK: Dane zapisane"));
+
       this->sendContent(supla_webpage_start(5));
-      rebootESP();
+      this->rebootESP();
+
     case E_CONFIG_FILE_OPEN:
       Serial.println(F("E_CONFIG_FILE_OPEN: Couldn't open file"));
       httpServer.send(200, "text/html", supla_webpage_start(4));
@@ -162,7 +164,7 @@ void SuplaWebServer::handleDSSave() {
     case E_CONFIG_OK:
       Serial.println(F("E_CONFIG_OK: Config save"));
       this->sendContent(supla_webpage_search(1));
-      rebootESP();
+      this->rebootESP();
     case E_CONFIG_FILE_OPEN:
       Serial.println(F("E_CONFIG_FILE_OPEN: Couldn't open file"));
       httpServer.send(200, "text/html", supla_webpage_search(2));
@@ -188,21 +190,18 @@ String SuplaWebServer::supla_webpage_start(int save) {
     content += F("<div id=\"msg\" class=\"c\">data saved</div>");
   } else if (save == 2) {
     content += F("<div id=\"msg\" class=\"c\">Restart modułu</div>");
-    content += F("<script type='text/javascript'>setTimeout(function(){location.href='/'} , 3000);</script>");
   } else if (save == 3) {
     content += F("<div id=\"msg\" class=\"c\">Dane wymazane - należy zrobić restart urządzenia</div>");
   } else if (save == 4) {
     content += F("<div id=\"msg\" class=\"c\">Błąd zapisu - nie można odczytać pliku - brak partycji FS.</div>");
   }  else if (save == 5) {
     content += F("<div id=\"msg\" class=\"c\">Dane zapisane - restart modułu.</div>");
-    content += F("<script type='text/javascript'>setTimeout(function(){location.href='/'} , 3000);</script>");
   }
   content += SuplaJavaScript();
 
   content += F("<div class='s'>");
   content += SuplaLogo();
   content += SuplaSummary();
-
   content += F("<form method='post' action='set'>");
   content += F("<div class='w'>");
   content += F("<h3>Ustawienia WIFI</h3>");
@@ -266,7 +265,6 @@ String SuplaWebServer::supla_webpage_start(int save) {
   }
   content += F("<label>Hasło</label></i>");
   content += F("</div>");
-
 
   //DS****************************************************************************
   if (!Supla::GUI::sensorDS.empty()) {
@@ -363,7 +361,6 @@ String SuplaWebServer::supla_webpage_start(int save) {
   content += F("<form method='post' action='rbt'>");
   content += F("<button type='submit'>Restart</button></form></div>");
   content += SuplaCopyrightBar();
-  content += F("<br><br>");
   return content;
 }
 
@@ -383,7 +380,6 @@ String SuplaWebServer::supla_webpage_search(int save) {
 
   if (save == 1) {
     content += F("<div id=\"msg\" class=\"c\">Dane zapisane - restart modułu</div>");
-    content += F("<script type='text/javascript'>setTimeout(function(){location.href='/search'} , 3000);</script>");
   } else if (save == 2) {
     content += F("<div id=\"msg\" class=\"c\">Błąd zapisu</div>");
   }
@@ -465,7 +461,6 @@ String SuplaWebServer::supla_webpage_search(int save) {
   content += F("<br><br>");
   content += F("<a href='/'><button>Powrót</button></a></div>");
   content += SuplaCopyrightBar();
-  content += F("<br><br>");
 
   return content;
 }
@@ -488,7 +483,7 @@ String SuplaWebServer::supla_webpage_upddate() {
   content += F("</center>");
   content += F("</div>");
   content += F("<a href='/'><button>POWRÓT</button></a></div>");
-  content += F("<br><br>");
+  content += SuplaCopyrightBar();
 
   return content;
 }
@@ -499,7 +494,7 @@ void SuplaWebServer::supla_webpage_reboot() {
       return httpServer.requestAuthentication();
   }
   httpServer.send(200, "text/html", supla_webpage_start(2));
-  rebootESP();
+  this->rebootESP();
 }
 
 const String SuplaWebServer::SuplaMetas() {
@@ -509,10 +504,10 @@ const String SuplaWebServer::SuplaMetas() {
 const String SuplaWebServer::SuplaStyle() {
   if (ConfigESP->configModeESP == NORMAL_MODE) {
     return F("<style>body{font-size:14px;font-family:'HelveticaNeue','Helvetica Neue','HelveticaNeueRoman','HelveticaNeue-Roman','Helvetica Neue Roman','TeXGyreHerosRegular','Helvetica','Tahoma','Geneva','Arial',sans-serif;font-weight:400;font-stretch:normal;background:#005c96;color:#fff;line-height:20px;padding:0}.s{width:460px;margin:0 auto;margin-top:calc(50vh - 340px);border:solid 3px #fff;padding:0 10px 10px;border-radius:3px}#l{display:block;max-width:150px;height:155px;margin:-80px auto 20px;background:#005c96;padding-right:5px}#l path{fill:#000}.w{margin:3px 0 16px;padding:5px 0px;border-radius:3px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}h1,h3{margin:10px 8px;font-family:'HelveticaNeueLight','HelveticaNeue-Light','Helvetica Neue Light','HelveticaNeue','Helvetica Neue','TeXGyreHerosRegular','Helvetica','Tahoma','Geneva','Arial',sans-serif;font-weight:300;font-stretch:normal;color:#000;font-size:23px}h1{margin-bottom:14px;color:#fff}span{display:block;margin:10px 7px 14px}i{display:block;font-style:normal;position:relative;border-bottom:solid 1px #005c96;height:42px}i:last-child{border:none}label{position:absolute;display:inline-block;top:0px;left:8px;color:#005c96;line-height:41px;pointer-events:none}input,select{width:calc(100% - 145px);border:none;font-size:16px;line-height:40px;border-radius:0;letter-spacing:-.5px;background:#fff;color:#000;padding-left:144px;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none!important;height:40px}select{padding:0px;float:right;margin:1px 3px 1px 2px}button{width:100%;border:0;background:#000;padding:5px 10px;font-size:16px;line-height:40px;color:white;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer}.c{background:#FFE836;position:fixed;width:100%;line-height:80px;color:#000;top:0;left:0;box-shadow:0 1px 3px rgba(0,0,0,.3);text-align:center;font-size:26px;z-index:100}@media all and (max-height: 920px){.s{margin-top:80px}}@media all and (max-width: 900px){.s{width:calc(100% - 20px);margin-top:40px;border:none;padding:0 8px;border-radius:0px}#l{max-width:80px;height:auto;margin:10px auto 20px}h1,h3{font-size:19px}i{border:none;height:auto}label{display:block;margin:4px 0 12px;color:#005c96;font-size:13px;position:relative;line-height:18px}input,select{width:calc(100% - 10px);font-size:16px;line-height:28px;padding:0px 5px;border-bottom:solid 1px #005c96}select{width:100%;float:none;margin:0}}</style>");
-    this->gui_color = (char*)GUI_BLUE;
+   // this->gui_color = (char*)GUI_BLUE;
   } else {
     return F("<style>body{font-size:14px;font-family:'HelveticaNeue','Helvetica Neue','HelveticaNeueRoman','HelveticaNeue-Roman','Helvetica Neue Roman','TeXGyreHerosRegular','Helvetica','Tahoma','Geneva','Arial',sans-serif;font-weight:400;font-stretch:normal;background:#00D151;color:#fff;line-height:20px;padding:0}.s{width:460px;margin:0 auto;margin-top:calc(50vh - 340px);border:solid 3px #fff;padding:0 10px 10px;border-radius:3px}#l{display:block;max-width:150px;height:155px;margin:-80px auto 20px;background:#00D151;padding-right:5px}#l path{fill:#000}.w{margin:3px 0 16px;padding:5px 0px;border-radius:3px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}h1,h3{margin:10px 8px;font-family:'HelveticaNeueLight','HelveticaNeue-Light','Helvetica Neue Light','HelveticaNeue','Helvetica Neue','TeXGyreHerosRegular','Helvetica','Tahoma','Geneva','Arial',sans-serif;font-weight:300;font-stretch:normal;color:#000;font-size:23px}h1{margin-bottom:14px;color:#fff}span{display:block;margin:10px 7px 14px}i{display:block;font-style:normal;position:relative;border-bottom:solid 1px #00D151;height:42px}i:last-child{border:none}label{position:absolute;display:inline-block;top:0px;left:8px;color:#00D151;line-height:41px;pointer-events:none}input,select{width:calc(100% - 145px);border:none;font-size:16px;line-height:40px;border-radius:0;letter-spacing:-.5px;background:#fff;color:#000;padding-left:144px;-webkit-appearance:none;-moz-appearance:none;appearance:none;outline:none!important;height:40px}select{padding:0px;float:right;margin:1px 3px 1px 2px}button{width:100%;border:0;background:#000;padding:5px 10px;font-size:16px;line-height:40px;color:white;border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer}.c{background:#FFE836;position:fixed;width:100%;line-height:80px;color:#000;top:0;left:0;box-shadow:0 1px 3px rgba(0,0,0,.3);text-align:center;font-size:26px;z-index:100}@media all and (max-height: 920px){.s{margin-top:80px}}@media all and (max-width: 900px){.s{width:calc(100% - 20px);margin-top:40px;border:none;padding:0 8px;border-radius:0px}#l{max-width:80px;height:auto;margin:10px auto 20px}h1,h3{font-size:19px}i{border:none;height:auto}label{display:block;margin:4px 0 12px;color:#00D151;font-size:13px;position:relative;line-height:18px}input,select{width:calc(100% - 10px);font-size:16px;line-height:28px;padding:0px 5px;border-bottom:solid 1px #00D151}select{width:100%;float:none;margin:0}}</style>");
-    this->gui_color = (char*)GUI_GREEN;
+   // this->gui_color = (char*)GUI_GREEN;
   }
 
   //const char* gui_box_shadow = "box-shadow:0 1px 20px rgba(0,0,0,.9)";
@@ -528,16 +523,27 @@ const String SuplaWebServer::SuplaLogo() {
 }
 
 const String SuplaWebServer::SuplaSummary() {
-  return
-    "<h1>" + String(ConfigManager->get(KEY_HOST_NAME)->getValue()) + " by krycha</h1>" +
-    "<span>LAST STATE: " + String(ConfigESP->getLastStatusSupla()) + "<br>" +
-    "Firmware: SuplaDevice " + String(Supla::Channel::reg_dev.SoftVer) + "<br>" +
-    "GUID: " + String(ConfigManager->get(KEY_SUPLA_GUID)->getValueHex(SUPLA_GUID_SIZE)) + "<br>" +
-    "MAC: " + String(ConfigESP->getMacAddress(true)) + "</span>";
+  String content = "";
+  content += F("<h1>");
+  content += String(ConfigManager->get(KEY_HOST_NAME)->getValue());
+  content += F(" by krycha</h1>");
+  content += F("<span>LAST STATE: ");
+  content += String(ConfigESP->getLastStatusSupla());
+  content += F("<br>");
+  content += F("Firmware: SuplaDevice ");
+  content += String(Supla::Channel::reg_dev.SoftVer);
+  content += F("<br>");
+  content += F("GUID: ");
+  content += String(ConfigManager->get(KEY_SUPLA_GUID)->getValueHex(SUPLA_GUID_SIZE));
+  content += F("<br>");
+  content += F("MAC: ");
+  content += String(ConfigESP->getMacAddress(true));
+  content += F("</span>");
+  return content;
 }
 
-const  String SuplaWebServer::SuplaJavaScript() {
-  return F("<script type='text/javascript'>setTimeout(function(){var element =  document.getElementById('msg');if ( element != null ) element.style.visibility = 'hidden';},3200);</script>");
+const String SuplaWebServer::SuplaJavaScript() {
+  return F("<script type='text/javascript'>setTimeout(function(){var element =  document.getElementById('msg');if ( element != null ) { element.style.visibility = 'hidden'; location.href='/'; }},3200);</script>");
 }
 
 const String SuplaWebServer::SuplaCopyrightBar() {
@@ -556,4 +562,10 @@ void SuplaWebServer::sendContent(const String content) {
   httpServer.setContentLength(CONTENT_LENGTH_UNKNOWN);
   httpServer.send(200, "text/html", " ");
   httpServer.sendContent(content);
+}
+
+void SuplaWebServer::redirectToIndex() {
+  httpServer.sendHeader("Location", "/", true);
+  httpServer.send(302, "text/plain", "");
+  httpServer.client().stop();
 }

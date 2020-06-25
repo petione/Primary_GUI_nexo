@@ -63,6 +63,7 @@ class SuplaWebServer : public Supla::Element {
     void rebootESP();
 
     void sendContent(const String content);
+    void redirectToIndex();
 
     const char* Supported_Button[2] = {
       "MONOSTABLE",
@@ -74,7 +75,7 @@ class SuplaWebServer : public Supla::Element {
       "ON_PRESS"
     };
 
-    char* gui_color;
+  //  char* gui_color;
 
     char www_username[MAX_MLOGIN];
     char www_password[MAX_MPASSWORD];
