@@ -27,9 +27,9 @@ SuplaConfigESP::SuplaConfigESP() {
     ConfigManager->set(KEY_LOGIN_PASS, DEFAULT_LOGIN_PASS);
     ConfigManager->set(KEY_HOST_NAME, DEFAULT_HOSTNAME);
 
-    char BUTTON[MAX_TYPE_BUTTON];
-    memset(BUTTON, Supla::ON_PRESS + '0', MAX_TYPE_BUTTON);
-    ConfigManager->set(KEY_TYPE_BUTTON, BUTTON);
+    //char BUTTON[MAX_TYPE_BUTTON];
+    //memset(BUTTON, Supla::ON_PRESS + '0', MAX_TYPE_BUTTON);
+    //ConfigManager->set(KEY_TYPE_BUTTON, BUTTON);
 
     ConfigManager->save();
     configModeInit();
